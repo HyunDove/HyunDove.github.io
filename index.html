@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>김승현 · AI/ML 포트폴리오</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0d1a;
+      --surface:  #13131f;
+      --border:   #1e1e30;
+      --text:     #e2e2f0;
+      --muted:    #6b6b8a;
+      --ml-color: #4A9EFF;
+      --rl-color: #FF5C5C;
+      --accent:   #a78bfa;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(167,139,250,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ml-color), var(--rl-color));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(167,139,250,0.3);
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    header h1 span { color: var(--accent); }
+    header p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto 28px;
+    }
+    .header-tags {
+      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    }
+    .header-tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── 섹션 ── */
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* ── 프로젝트 카드 ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .project-card:hover { transform: translateY(-3px); }
+    .project-card.ml:hover { border-color: var(--ml-color); }
+    .project-card.rl:hover { border-color: var(--rl-color); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+    .project-card.ml::before { background: linear-gradient(90deg, var(--ml-color), #818cf8); }
+    .project-card.rl::before { background: linear-gradient(90deg, var(--rl-color), #f97316); }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .card-category {
+      font-size: 0.68rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .ml .card-category { background: rgba(74,158,255,0.12); color: var(--ml-color); }
+    .rl .card-category { background: rgba(255,92,92,0.12);  color: var(--rl-color); }
+
+    .card-period {
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      padding-top: 4px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .card-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+      line-height: 1.75;
+    }
+
+    /* 기술 스택 */
+    .tech-list {
+      display: flex; flex-wrap: wrap; gap: 7px;
+      margin-bottom: 22px;
+    }
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: #b0b0cc;
+    }
+
+    /* 성과 수치 */
+    .highlights {
+      display: flex; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .highlight-item {
+      flex: 1;
+      padding: 14px 16px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .highlight-item:last-child { border-right: none; }
+    .highlight-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .ml .highlight-value { color: var(--ml-color); }
+    .rl .highlight-value { color: var(--rl-color); }
+    .highlight-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* 링크 버튼 */
+    .card-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      border: 1px solid transparent;
+    }
+    .btn:hover { opacity: 0.82; transform: translateY(-1px); }
+    .btn-primary.ml { background: var(--ml-color); color: #000; }
+    .btn-primary.rl { background: var(--rl-color); color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: #3a3a55; color: var(--text); }
+
+    /* ── 푸터 ── */
+    footer {
+      text-align: center;
+      padding: 36px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .icon { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
+
+    @media (max-width: 560px) {
+      .project-card { padding: 22px 18px; }
+      .highlights { flex-wrap: wrap; }
+      .highlight-item { min-width: 45%; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="avatar">👨‍💻</div>
+  <h1>김승현 <span>·</span> AI/ML Portfolio</h1>
+  <p>머신러닝 · 딥러닝 · 강화학습 프로젝트 모음</p>
+  <div class="header-tags">
+    <span class="header-tag">Python</span>
+    <span class="header-tag">scikit-learn</span>
+    <span class="header-tag">PyTorch</span>
+    <span class="header-tag">Streamlit</span>
+    <span class="header-tag">Reinforcement Learning</span>
+  </div>
+</header>
+
+<main class="section">
+  <p class="section-label">// Projects</p>
+
+  <!-- ── 프로젝트 1: ML ── -->
+  <div class="project-card ml">
+    <div class="card-top">
+      <div>
+        <span class="card-category">Machine Learning</span>
+        <h2 class="card-title">대출 금리 예측 모델</h2>
+      </div>
+      <span class="card-period">2026.06.17 – 06.24</span>
+    </div>
+
+    <p class="card-desc">
+      Kaggle Credit Risk Dataset(32,581건)을 기반으로 대출 금리를 예측하는 회귀 모델을 구현했습니다.
+      Random Forest · XGBoost · Ridge 등 4가지 모델을 RMSE · MAE · R²로 비교하고,
+      Flask REST API와 Streamlit 웹앱으로 배포했습니다.
+    </p>
+
+    <div class="tech-list">
+      <span class="tech-tag">Python</span>
+      <span class="tech-tag">scikit-learn</span>
+      <span class="tech-tag">XGBoost</span>
+      <span class="tech-tag">Flask</span>
+      <span class="tech-tag">Streamlit</span>
+      <span class="tech-tag">Plotly</span>
+      <span class="tech-tag">Jupyter</span>
+    </div>
+
+    <div class="highlights">
+      <div class="highlight-item">
+        <div class="highlight-value">32,581</div>
+        <div class="highlight-label">학습 데이터</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">4종</div>
+        <div class="highlight-label">비교 모델</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">RMSE</div>
+        <div class="highlight-label">평가 지표</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">Cloud</div>
+        <div class="highlight-label">Streamlit 배포</div>
+      </div>
+    </div>
+
+    <div class="card-links">
+      <a class="btn btn-primary ml" href="https://shmlassignment.streamlit.app/" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.293 7.294-1.414-1.414L17.585 5H13V3h8z"/></svg>
+        Streamlit 앱
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/machine-learning-assignment" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+
+  <!-- ── 프로젝트 2: DL + RL ── -->
+  <div class="project-card rl">
+    <div class="card-top">
+      <div>
+        <span class="card-category">Deep Learning · Reinforcement Learning</span>
+        <h2 class="card-title">슈퍼마리오 DQN 강화학습</h2>
+      </div>
+      <span class="card-period">2026.06.25 – 07.01</span>
+    </div>
+
+    <p class="card-desc">
+      Deep Q-Network(DQN)으로 슈퍼마리오 1-1 스테이지를 자율 플레이하는 에이전트를 학습했습니다.
+      CNN이 게임 화면(픽셀)을 인식하고 ε-greedy · Experience Replay · Target Network를 적용해
+      Google Colab T4 GPU에서 8,500 에피소드를 학습, 보상을 134% 향상시켰습니다.
+    </p>
+
+    <div class="tech-list">
+      <span class="tech-tag">Python</span>
+      <span class="tech-tag">PyTorch</span>
+      <span class="tech-tag">CNN</span>
+      <span class="tech-tag">OpenAI Gym</span>
+      <span class="tech-tag">TensorBoard</span>
+      <span class="tech-tag">Streamlit</span>
+      <span class="tech-tag">Google Colab</span>
+    </div>
+
+    <div class="highlights">
+      <div class="highlight-item">
+        <div class="highlight-value">8,500</div>
+        <div class="highlight-label">학습 에피소드</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">1M+</div>
+        <div class="highlight-label">총 학습 스텝</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">+134%</div>
+        <div class="highlight-label">보상 성장률</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">T4 GPU</div>
+        <div class="highlight-label">학습 환경</div>
+      </div>
+    </div>
+
+    <div class="card-links">
+      <a class="btn btn-primary rl" href="https://supermario-dqn.streamlit.app/" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.293 7.294-1.414-1.414L17.585 5H13V3h8z"/></svg>
+        Streamlit 앱
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/supermario-dqn" target="_blank">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 김승현 &nbsp;·&nbsp; <a href="https://github.com/HyunDove" target="_blank">github.com/HyunDove</a></p>
+</footer>
+
+</body>
+</html>
