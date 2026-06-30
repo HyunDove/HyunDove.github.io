@@ -206,6 +206,19 @@
     }
 
     /* 링크 버튼 */
+    .card-report {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+    .card-report a {
+      color: var(--rl-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .card-report a:hover { text-decoration: underline; }
+
     .card-links { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
       display: inline-flex; align-items: center; gap: 7px;
@@ -366,6 +379,11 @@
         <div class="highlight-label">스테이지 클리어</div>
       </div>
     </div>
+
+    <p class="card-report">
+      수행내역서입니다.<br>
+      <a href="https://github.com/HyunDove/supermario-dqn/releases/tag/v1.0" target="_blank">📄 DQN_수행내역서.md (v1.0)</a>
+    </p>
 
     <div class="card-links">
       <a class="btn btn-primary rl" href="https://supermario-dqn.streamlit.app/" target="_blank">
