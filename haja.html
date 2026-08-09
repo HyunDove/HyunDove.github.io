@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HajaCheck — AI 시설물 하자 점검 플랫폼 · 김승현 포트폴리오</title>
+<meta name="description" content="8인 팀 4주 프로젝트. PM으로 설계·일정을 관리하고 플랫폼 관리자 콘솔을 화면부터 API까지 직접 구현했습니다." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="alternate icon" href="assets/favicon.svg" />
+<link rel="stylesheet" href="assets/base.css" />
+</head>
+<body data-proj="haja">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="index.html">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
+      전체 프로젝트
+    </a>
+    <span class="topbar-title">Team · HajaCheck</span>
+    <div class="topbar-links">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/HyunDove/HajaCheck" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="detail-hero">
+    <span class="eyebrow">팀 프로젝트 · 8인 · 4주</span>
+    <h1>HajaCheck — AI 시설물 외관 하자 점검 플랫폼</h1>
+    <p class="lede">
+      시설물 사진을 올리면 Vision 모델이 하자를 탐지하고, 등급을 매기고, LLM이 점검 보고서 초안까지 작성합니다.
+      저는 <strong>PM으로 설계와 일정을 맡으면서, 플랫폼 관리자 콘솔을 화면부터 API까지 직접 구현</strong>했습니다.
+    </p>
+
+    <div class="meta-grid">
+      <div class="meta-cell"><div class="meta-key">기간</div><div class="meta-val">2026.07.09 – 08.07 (4주)</div></div>
+      <div class="meta-cell"><div class="meta-key">인원</div><div class="meta-val">8인 팀</div></div>
+      <div class="meta-cell"><div class="meta-key">본인 역할</div><div class="meta-val">PM · 관리자 도메인 풀스택</div></div>
+      <div class="meta-cell"><div class="meta-key">배포</div><div class="meta-val">OCI · Docker Compose · CD</div></div>
+    </div>
+
+    <p class="sec-num" style="margin-bottom:10px;">프로젝트 규모 — 팀 전체 기준</p>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">712</div><div class="kpi-label">머지된 PR (팀 전체)</div></div>
+      <div class="kpi"><div class="kpi-val">4,550</div><div class="kpi-label">자동화 테스트 (팀 전체)</div></div>
+      <div class="kpi"><div class="kpi-val">97</div><div class="kpi-label">API operation</div></div>
+      <div class="kpi"><div class="kpi-val">32일</div><div class="kpi-label">연속 개발 기간</div></div>
+    </div>
+
+    <div class="tech-list">
+      <span class="tech-tag">Java 17</span><span class="tech-tag">Spring Boot 3.3</span>
+      <span class="tech-tag">React 18</span><span class="tech-tag">PostgreSQL 16</span>
+      <span class="tech-tag">FastAPI</span><span class="tech-tag">LangChain</span>
+      <span class="tech-tag">Docker Compose</span><span class="tech-tag">nginx</span><span class="tech-tag">OCI</span>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://youtu.be/IagMc_vZxpA" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.293 7.294-1.414-1.414L17.585 5H13V3h8z"/></svg>
+        시연 영상
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/HajaCheck" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        소스 코드
+      </a>
+    </div>
+  </header>
+
+  <!-- ── 1. 개요 ── -->
+  <section>
+    <span class="sec-num">01</span>
+    <h2>어떤 제품인가</h2>
+    <p>
+      시설물 외관 점검은 지금도 사람이 현장에서 눈으로 보고 사진을 찍은 뒤,
+      사무실에서 보고서를 손으로 쓰는 방식입니다.
+      HajaCheck는 이 과정에서 <strong>탐지·등급 산정·보고서 초안</strong>을 자동화합니다.
+    </p>
+    <p>
+      사진을 올리면 유형별 전용 Vision 모델(균열은 U-Net, 면적형 하자는 YOLO)이
+      균열·박리박락·철근노출을 탐지하고, 규칙 기반으로 A~E 등급을 매깁니다.
+      사람이 결과를 검수한 뒤, LangChain 기반 LLM이 점검 보고서 초안과 관련 법규 질의응답을 지원합니다.
+    </p>
+
+    <figure>
+      <img src="assets/img/haja/product.png" alt="HajaCheck 통계 화면 — AI 탐지 유형별 분포, 등급별 분포, 시설물군 히트맵" loading="lazy" />
+      <figcaption>
+        fig 1.1 — 서비스 화면 예시(통계). <strong>팀 전체 산출물이며, 이 화면은 본인 담당이 아닙니다.</strong>
+        제품 맥락을 보여주기 위해 첨부했습니다.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 2. 담당 범위 ── -->
+  <section>
+    <span class="sec-num">02</span>
+    <h2>8인 중 내가 맡은 것</h2>
+    <p>
+      전원이 화면·API·AI 연동을 직접 구현하는 <strong>메뉴 담당제</strong>로 진행했습니다.
+      저는 PM 역할과 함께 <strong>플랫폼 관리자 도메인</strong>을 맡았습니다.
+    </p>
+
+    <div class="scope-split">
+      <div class="scope-box mine">
+        <div class="scope-head">본인 담당</div>
+        <ul>
+          <li>PM — PRD 작성·버전 관리, 아키텍처 설계, 일정·산출물 관리</li>
+          <li>플랫폼 관리자 콘솔 <strong>풀스택</strong> (화면 + API)</li>
+          <li>권한 체계 — <code>PLATFORM_ADMIN</code> 역할, 메뉴 접근 제어</li>
+          <li>기업 회원 온보딩 — 초대 코드·좌석 검사·가입 승인</li>
+          <li>API 계약(OpenAPI) 관리</li>
+          <li>RAG 검색 파이프라인 코치(설계 리뷰)</li>
+        </ul>
+      </div>
+      <div class="scope-box">
+        <div class="scope-head">팀원 담당 (참고)</div>
+        <ul>
+          <li>DevOps·인프라·CI/CD, 로그인·회원가입</li>
+          <li>대시보드·시설물 관리, 미디어 파이프라인</li>
+          <li>점검 관리(업로드·분석·검수), AI 추론 연동</li>
+          <li>하자 관리·통계, DB 스키마</li>
+          <li>보고서 생성 체인, 지도 뷰</li>
+          <li>고객지원·실시간 상담, RAG 챗봇 구현</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure class="wide">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 860 320" role="img" aria-label="React 프론트엔드, Spring Boot 백엔드, FastAPI AI 서버, PostgreSQL로 구성된 시스템에서 본인이 담당한 관리자 콘솔과 권한 도메인이 강조 표시된 구조도">
+        <defs>
+          <marker id="ar-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d3c4ff"/>
+          </marker>
+          <marker id="ar-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f6e8c"/>
+          </marker>
+        </defs>
+
+        <!-- 범례 -->
+        <rect x="600" y="14" width="14" height="10" rx="2" fill="#1d1633" stroke="#b79cff" stroke-width="1.5"/>
+        <text x="622" y="23" fill="#d3c4ff" font-size="10.5" font-family="monospace">본인 담당</text>
+        <rect x="712" y="14" width="14" height="10" rx="2" fill="#131320" stroke="#26263c"/>
+        <text x="734" y="23" fill="#6f6e8c" font-size="10.5" font-family="monospace">팀원 담당</text>
+
+        <!-- FE 계층 -->
+        <text x="14" y="56" fill="#6f6e8c" font-family="monospace" font-size="10.5" letter-spacing="1.2">FRONTEND · React 18</text>
+        <rect x="14" y="66" width="196" height="52" rx="9" fill="#1d1633" stroke="#b79cff" stroke-width="1.6"/>
+        <text x="112" y="88" fill="#d3c4ff" font-size="12.5" text-anchor="middle" font-weight="600">플랫폼 관리자 콘솔</text>
+        <text x="112" y="106" fill="#a9a8c4" font-size="9.5" text-anchor="middle" font-family="monospace">사용자·플랜·통계·모니터링</text>
+
+        <rect x="222" y="66" width="150" height="52" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="297" y="88" fill="#a9a8c4" font-size="12" text-anchor="middle">점검·하자·보고서</text>
+        <text x="297" y="106" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">팀원 담당 화면</text>
+
+        <!-- BE 계층 -->
+        <text x="14" y="156" fill="#6f6e8c" font-family="monospace" font-size="10.5" letter-spacing="1.2">BACKEND · Spring Boot 3.3</text>
+        <rect x="14" y="166" width="196" height="52" rx="9" fill="#1d1633" stroke="#b79cff" stroke-width="1.6"/>
+        <text x="112" y="188" fill="#d3c4ff" font-size="12.5" text-anchor="middle" font-weight="600">관리자 API · 권한</text>
+        <text x="112" y="206" fill="#a9a8c4" font-size="9.5" text-anchor="middle" font-family="monospace">PLATFORM_ADMIN · 메뉴 접근</text>
+
+        <rect x="222" y="166" width="150" height="52" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="297" y="188" fill="#a9a8c4" font-size="12" text-anchor="middle">도메인 API</text>
+        <text x="297" y="206" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">점검·하자·미디어</text>
+
+        <!-- 세로 연결 -->
+        <line x1="112" y1="122" x2="112" y2="162" stroke="#d3c4ff" stroke-width="1.6" marker-end="url(#ar-h)"/>
+        <line x1="297" y1="122" x2="297" y2="162" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-t)"/>
+
+        <!-- DB -->
+        <rect x="14" y="252" width="358" height="48" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="193" y="273" fill="#a9a8c4" font-size="12" text-anchor="middle" font-weight="600">PostgreSQL 16</text>
+        <text x="193" y="290" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">menus / menu_role_access · 회사 스코프 컬럼</text>
+        <line x1="112" y1="222" x2="112" y2="248" stroke="#d3c4ff" stroke-width="1.6" marker-end="url(#ar-h)"/>
+        <line x1="297" y1="222" x2="297" y2="248" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-t)"/>
+
+        <!-- AI 서버 -->
+        <text x="470" y="156" fill="#6f6e8c" font-family="monospace" font-size="10.5" letter-spacing="1.2">AI SERVER · FastAPI</text>
+        <rect x="470" y="166" width="176" height="52" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="558" y="188" fill="#a9a8c4" font-size="12" text-anchor="middle">Vision 추론</text>
+        <text x="558" y="206" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">균열 U-Net · 면적형 YOLO</text>
+
+        <rect x="664" y="166" width="182" height="52" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="755" y="188" fill="#a9a8c4" font-size="12" text-anchor="middle">LLM · RAG</text>
+        <text x="755" y="206" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">보고서 초안 · 법규 QA</text>
+
+        <line x1="376" y1="192" x2="466" y2="192" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-t)"/>
+        <line x1="650" y1="192" x2="660" y2="192" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-t)"/>
+
+        <!-- 배포 -->
+        <rect x="470" y="252" width="376" height="48" rx="9" fill="#131320" stroke="#26263c" stroke-dasharray="5 3"/>
+        <text x="658" y="273" fill="#a9a8c4" font-size="12" text-anchor="middle" font-weight="600">OCI · Docker Compose + nginx</text>
+        <text x="658" y="290" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">main 승격 시 CD 자동 배포</text>
+
+        <!-- API 계약 -->
+        <rect x="470" y="60" width="376" height="64" rx="9" fill="#1d1633" stroke="#b79cff" stroke-width="1.6" stroke-dasharray="6 3"/>
+        <text x="658" y="84" fill="#d3c4ff" font-size="12.5" text-anchor="middle" font-weight="600">OpenAPI 계약 (단일 기준)</text>
+        <text x="658" y="102" fill="#a9a8c4" font-size="9.5" text-anchor="middle" font-family="monospace">PM으로서 관리 — 8인 병렬 개발의 기준선</text>
+        <text x="658" y="117" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">프론트·백엔드가 서로 기다리지 않고 동시 진행</text>
+        <path d="M 470 92 L 400 92 Q 390 92 390 102 L 390 160" fill="none" stroke="#b79cff" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#ar-h)"/>
+      </svg>
+      </div>
+      <figcaption>fig 2.1 — 시스템 구조와 본인 담당 범위. 보라색 실선이 직접 구현한 영역이다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 3. 관리자 콘솔 ── -->
+  <section>
+    <span class="sec-num">03</span>
+    <h2>플랫폼 관리자 콘솔 구현</h2>
+    <p>
+      서비스를 운영하는 쪽에서 쓰는 화면 전체를 맡았습니다.
+      프론트엔드와 백엔드를 나눠 받은 게 아니라 <strong>화면과 API를 같이 만들었습니다.</strong>
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>기능</th><th>구현 범위</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>사용자 관리</td><td>화면 + API</td><td>기업·사용자 목록, 역할 부여, 등록·필터</td></tr>
+          <tr><td>플랜·쿼터 관리</td><td>화면 + API</td><td>요금제 정책 편집, 사용량 한도 설정</td></tr>
+          <tr><td>서비스 통계</td><td>화면 + API</td><td>기간별 KPI, 업그레이드 전환 지표</td></tr>
+          <tr><td>시스템 모니터링</td><td>화면 + API</td><td>에러 로그·분석 잡 큐·서버 자원 실데이터 연동</td></tr>
+          <tr><td>권한 체계</td><td>백엔드</td><td><code>PLATFORM_ADMIN</code> 역할 신설, Security 권한 매처</td></tr>
+          <tr><td>기업 온보딩</td><td>화면 + API</td><td>초대 코드 발급·사용, 좌석 검사, 가입 승인</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 4. 설계 판단 ── -->
+  <section>
+    <span class="sec-num">04</span>
+    <h2>기억에 남는 설계 판단</h2>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">01</span>
+        <span class="trouble-title">메뉴를 코드에서 DB로 옮긴 이유</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">상황</div>
+          <p>사이드바와 관리자 메뉴가 프론트엔드에 하드코딩돼 있었습니다. 역할이 하나 늘거나 메뉴 노출 조건이 바뀔 때마다 프론트를 수정·배포해야 했습니다.</p>
+        </div>
+        <div class="step cause">
+          <div class="step-label">판단</div>
+          <p>프로젝트 중반에 <code>PLATFORM_ADMIN</code>, <code>COUNSELOR</code> 등 역할이 계속 추가되는 흐름이 보였습니다. 이대로면 <strong>역할이 늘어날 때마다 배포가 필요한 구조</strong>가 굳어진다고 판단했습니다.</p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">조치</div>
+          <p>메뉴 정의와 역할별 접근 권한을 <code>menus</code> / <code>menu_role_access</code> 테이블로 옮기고, 프론트가 로그인 시 조회해 렌더링하도록 전환했습니다. 이후 메뉴 변경은 <strong>데이터 수정만으로</strong> 처리했습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">02</span>
+        <span class="trouble-title">회사 스코프를 벗어난 데이터 접근 차단</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">상황</div>
+          <p>여러 기업이 한 서비스를 쓰는 구조라, 요청에 담긴 회사 식별자를 그대로 믿으면 <strong>다른 회사 데이터가 조회될 수 있는</strong> 위험이 있었습니다.</p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">조치</div>
+          <p>관리자 API에서 요청 값을 신뢰하지 않고 <strong>인증 주체의 소속을 서버에서 다시 확인</strong>하도록 하고, 조회 쿼리에 회사 스코프를 강제했습니다. 스코프를 벗어난 요청은 빈 결과가 아니라 명시적 예외로 처리해 문제가 조용히 묻히지 않게 했습니다.</p>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>권한 검사는 화면에서 메뉴를 감추는 것으로 끝나지 않습니다. <strong>화면을 감추는 것과 데이터를 막는 것은 별개</strong>이고, 실제 방어선은 항상 서버 쪽 쿼리에 있어야 합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">03</span>
+        <span class="trouble-title">8인이 서로 기다리지 않게 만들기</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">상황</div>
+          <p>전원이 화면과 API를 함께 만드는 방식이라, 담당자끼리 API 형태를 말로 맞추면 <strong>한쪽이 끝날 때까지 다른 쪽이 멈추는</strong> 상황이 반복될 수 있었습니다.</p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">조치</div>
+          <p>PM으로서 <code>openapi.yaml</code>을 단일 기준으로 두고, 스펙을 먼저 합의한 뒤 각자 구현하도록 했습니다. 스펙이 바뀌면 계약 문서를 먼저 고치고 알리는 순서를 지켰습니다. PRD도 구현이 진행되면서 실제와 어긋나면 <strong>v1.0 → v1.1로 실측에 맞춰 갱신</strong>했습니다.</p>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>문서는 써두는 게 목적이 아니라 <strong>다른 사람이 기다리지 않게 하는 도구</strong>였습니다. 실제와 어긋난 문서는 없느니만 못해서, 갱신을 미루지 않는 게 문서를 만드는 것보다 중요했습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. 회고 ── -->
+  <section>
+    <span class="sec-num">05</span>
+    <h2>배운 점과 아쉬운 점</h2>
+
+    <h3>가장 크게 남은 것</h3>
+    <p>
+      개인 과제와 가장 달랐던 점은 <strong>내 코드가 끝이 아니라는 것</strong>이었습니다.
+      관리자 콘솔 하나를 바꿔도 다른 담당자의 화면·API·DB에 영향이 갔고,
+      그래서 "무엇을 만들까"보다 <strong>"어떻게 합의하고 알릴까"</strong>에 시간을 더 썼습니다.
+      PM 역할을 겸하면서 이 조율 비용이 실제 개발 속도를 좌우한다는 걸 체감했습니다.
+    </p>
+
+    <h3>아쉬운 점</h3>
+    <ul>
+      <li><strong>권한 검사 규칙을 더 일찍 공통화했어야 했습니다.</strong> 회사 스코프 방어를 각 API에서 개별적으로 처리하다 보니 누락 위험이 남았습니다. 공통 계층에서 강제했다면 더 안전했을 것입니다.</li>
+      <li><strong>관리자 화면의 테스트가 상대적으로 얇았습니다.</strong> 프로젝트 전체 테스트는 4,550개였지만, 운영자만 쓰는 화면이라는 이유로 우선순위를 뒤로 미뤘던 부분이 있습니다.</li>
+      <li><strong>PM 업무와 구현을 병행하다 보니 리뷰가 밀리는 구간이 있었습니다.</strong> 내 구현이 급할 때 다른 사람의 PR 검토가 늦어졌고, 이건 팀 전체 속도를 떨어뜨렸습니다.</li>
+    </ul>
+  </section>
+
+  <nav class="pager" aria-label="다른 프로젝트">
+    <a class="pager-card to-ml" href="ml.html">
+      <div class="pg-label">개인 · Log 01</div>
+      <div class="pg-title">대출 금리 예측 모델 →</div>
+    </a>
+    <a class="pager-card to-rl" href="rl.html">
+      <div class="pg-label">개인 · Log 02</div>
+      <div class="pg-title">슈퍼마리오 DQN 강화학습 →</div>
+    </a>
+  </nav>
+
+</div>
+
+<footer>
+  <p>© 2026 김승현 · <a href="https://github.com/HyunDove" target="_blank" rel="noopener">github.com/HyunDove</a></p>
+</footer>
+
+</body>
+</html>

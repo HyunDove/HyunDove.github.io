@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>김승현 · AI/ML/LLM 실험 노트</title>
-<meta name="description" content="머신러닝 · 딥러닝 · 강화학습 · LLM 프로젝트 3편. 문제 정의부터 트러블슈팅까지의 기록." />
+<title>김승현 · AI Engineer 포트폴리오</title>
+<meta name="description" content="AI 모델부터 서비스 구현까지. 8인 팀 프로젝트(PM·풀스택)와 ML·강화학습·LLM 개인 프로젝트 기록." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="alternate icon" href="assets/favicon.svg" />
 <link rel="stylesheet" href="assets/base.css" />
@@ -57,6 +57,8 @@
   .project-card.ml:hover{border-color:var(--ml);box-shadow:0 8px 32px -12px rgba(91,141,239,.35);}
   .project-card.rl:hover{border-color:var(--rl);box-shadow:0 8px 32px -12px rgba(255,107,74,.35);}
   .project-card.llm:hover{border-color:var(--llm);box-shadow:0 8px 32px -12px rgba(47,217,196,.35);}
+  .project-card.haja{border-color:#332a4d;}
+  .project-card.haja:hover{border-color:var(--haja);box-shadow:0 8px 34px -12px rgba(183,156,255,.42);}
   .card-inner{padding:28px 28px 26px;}
 
   .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap;}
@@ -71,6 +73,22 @@
   .rl .card-log .dot{background:var(--rl);}
   .llm .card-log{background:rgba(47,217,196,.12);color:var(--llm-2);}
   .llm .card-log .dot{background:var(--llm);}
+  .haja .card-log{background:rgba(183,156,255,.15);color:var(--haja-2);}
+  .haja .card-log .dot{background:var(--haja);}
+  .haja .highlight-value{color:var(--haja-2);}
+  .haja .btn-primary{background:var(--haja);color:#140a26;}
+
+  /* HajaCheck 계측기 — 외벽 하자 탐지 */
+  .instrument.haja-inst{background:linear-gradient(180deg,rgba(183,156,255,.09),transparent);}
+  .instrument.haja-inst svg{width:100%;height:100%;}
+  .haja-wall rect,.haja-wall line{fill:none;stroke:rgba(255,255,255,.13);stroke-width:1;}
+  .haja-crack{fill:none;stroke:#ff8f6b;stroke-width:1.6;stroke-linecap:round;}
+  .haja-box{fill:none;stroke:var(--haja);stroke-width:1.3;stroke-dasharray:4 2.5;}
+  .haja-tag{fill:var(--haja-2);font-family:var(--font-mono);font-size:8px;}
+  .haja-grade rect{fill:rgba(183,156,255,.12);stroke:var(--haja);stroke-width:1.2;}
+  .haja-grade-label{fill:var(--muted);font-family:var(--font-mono);font-size:9px;}
+  .haja-grade-val{fill:var(--haja-2);font-family:var(--font-mono);font-size:20px;font-weight:600;text-anchor:end;}
+  .haja-cap{fill:var(--muted);font-family:var(--font-mono);font-size:8px;}
 
   .card-period{font-size:.72rem;color:var(--muted);font-family:var(--font-mono);white-space:nowrap;padding-top:5px;font-variant-numeric:tabular-nums;}
   .card-title{font-family:var(--font-display);font-size:1.32rem;font-weight:700;margin-bottom:12px;letter-spacing:-.005em;text-wrap:balance;}
@@ -144,20 +162,74 @@
 
 <header class="home">
   <p class="prompt-line"><span class="sigil">&#10095;</span>whoami<span class="cursor"></span></p>
-  <h1>김승현<span class="role">AI / ML / LLM Engineer — 실험 노트</span></h1>
-  <p class="bio">AI 심화 과정을 수료하며 진행한 머신러닝 · 딥러닝 · 강화학습 · LLM 프로젝트 세 편입니다.<br />각 프로젝트의 문제 정의부터 시행착오까지 기록했습니다.</p>
+  <h1>김승현<span class="role">AI Engineer — 모델부터 서비스까지</span></h1>
+  <p class="bio">AI 모델을 만들고, 그것이 동작하는 서비스까지 구현합니다.<br />8인 팀 프로젝트에서 PM과 풀스택 개발을 맡았고, 개인 프로젝트로 ML · 강화학습 · LLM을 다뤘습니다.</p>
   <div class="header-tags">
     <span class="header-tag">Python</span>
     <span class="header-tag">scikit-learn</span>
     <span class="header-tag">PyTorch</span>
     <span class="header-tag">Streamlit</span>
-    <span class="header-tag">Reinforcement Learning</span>
     <span class="header-tag">LangChain / LLM</span>
+    <span class="header-tag">Spring Boot</span>
+    <span class="header-tag">React</span>
   </div>
 </header>
 
 <main class="home">
-  <p class="section-label">Projects — 진행 순</p>
+  <p class="section-label">Team — 팀 프로젝트</p>
+
+  <!-- ── 팀 : HajaCheck ── -->
+  <article class="project-card haja">
+    <div class="instrument haja-inst">
+      <svg viewBox="0 0 400 108" role="img" aria-label="건물 외벽에서 균열을 탐지해 바운딩 박스로 표시하고 등급을 산정하는 모습">
+        <g class="haja-wall">
+          <rect x="18" y="16" width="150" height="76" rx="3"/>
+          <line x1="18" y1="42" x2="168" y2="42"/><line x1="18" y1="68" x2="168" y2="68"/>
+          <line x1="68" y1="16" x2="68" y2="92"/><line x1="118" y1="16" x2="118" y2="92"/>
+        </g>
+        <path class="haja-crack" d="M44,24 L52,40 L44,52 L56,68 L50,86"/>
+        <rect class="haja-box" x="34" y="20" width="34" height="70" rx="2"/>
+        <text class="haja-tag" x="74" y="30">균열 0.91</text>
+        <rect class="haja-box" x="122" y="52" width="30" height="26" rx="2"/>
+        <text class="haja-tag" x="158" y="60">박리 0.77</text>
+        <g class="haja-grade">
+          <rect x="248" y="38" width="120" height="34" rx="6"/>
+          <text x="264" y="60" class="haja-grade-label">등급</text>
+          <text x="336" y="61" class="haja-grade-val">D</text>
+        </g>
+        <text class="haja-cap" x="248" y="88">규칙 기반 A–E 산정</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-top">
+        <div>
+          <span class="card-log"><span class="dot"></span>Team · 8인 · PM &amp; 풀스택</span>
+          <h2 class="card-title">HajaCheck — AI 시설물 하자 점검 플랫폼</h2>
+        </div>
+        <span class="card-period">2026.07.09 – 08.07</span>
+      </div>
+      <p class="card-desc">
+        시설물 사진에서 Vision 모델이 하자를 탐지하고 등급을 매긴 뒤, LLM이 점검 보고서 초안까지 작성합니다.
+        PM으로 설계·일정을 맡으면서 플랫폼 관리자 콘솔을 화면부터 API까지 직접 구현했습니다.
+      </p>
+      <div class="highlights">
+        <div class="highlight-item"><div class="highlight-value">8인</div><div class="highlight-label">팀 규모</div></div>
+        <div class="highlight-item"><div class="highlight-value">4주</div><div class="highlight-label">개발 기간</div></div>
+        <div class="highlight-item"><div class="highlight-value">PM</div><div class="highlight-label">본인 역할</div></div>
+        <div class="highlight-item"><div class="highlight-value">실배포</div><div class="highlight-label">OCI · CD 자동화</div></div>
+      </div>
+      <div class="card-links">
+        <a class="btn btn-primary" href="haja.html">
+          자세히 보기
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://youtu.be/IagMc_vZxpA" target="_blank" rel="noopener">시연 영상</a>
+        <a class="btn btn-ghost" href="https://github.com/HyunDove/HajaCheck" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </article>
+
+  <p class="section-label">Personal — 개인 프로젝트 · 진행 순</p>
 
   <!-- ── LOG 01 : ML ── -->
   <article class="project-card ml">

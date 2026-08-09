@@ -28,6 +28,7 @@
   --ml:#5b8def;    --ml-2:#8fb4ff;
   --rl:#ff6b4a;    --rl-2:#ffb020;
   --llm:#2fd9c4;   --llm-2:#6ff0d8;
+  --haja:#b79cff;  --haja-2:#d3c4ff;
 
   /* 프로젝트별 색상 — 각 페이지 body에서 덮어씀 */
   --proj:var(--accent);
@@ -45,6 +46,7 @@
 body[data-proj="ml"]{  --proj:var(--ml);  --proj-2:var(--ml-2);  --proj-soft:rgba(91,141,239,.12); }
 body[data-proj="rl"]{  --proj:var(--rl);  --proj-2:var(--rl-2);  --proj-soft:rgba(255,107,74,.12); }
 body[data-proj="llm"]{ --proj:var(--llm); --proj-2:var(--llm-2); --proj-soft:rgba(47,217,196,.12); }
+body[data-proj="haja"]{--proj:var(--haja);--proj-2:var(--haja-2);--proj-soft:rgba(183,156,255,.14); }
 
 html{scroll-behavior:smooth;}
 
@@ -262,6 +264,7 @@ figure.wide figcaption{
 .btn-primary{background:var(--proj);color:#08101f;}
 body[data-proj="rl"] .btn-primary{color:#1a0a05;}
 body[data-proj="llm"] .btn-primary{color:#06201c;}
+body[data-proj="haja"] .btn-primary{color:#140a26;}
 .btn-ghost{background:transparent;border-color:var(--border);color:var(--text-dim);}
 .btn-ghost:hover{border-color:var(--border-strong);color:var(--text);}
 .btn-sm{padding:6px 13px;font-size:.75rem;}
@@ -294,6 +297,18 @@ body[data-proj="llm"] .btn-primary{color:#06201c;}
 .pager-card.to-rl .pg-title{color:var(--rl-2);}
 .pager-card.to-llm:hover{border-color:var(--llm);}
 .pager-card.to-llm .pg-title{color:var(--llm-2);}
+.pager-card.to-haja:hover{border-color:var(--haja);}
+.pager-card.to-haja .pg-title{color:var(--haja-2);}
+
+/* 담당 범위 구분 블록 (팀 프로젝트) */
+.scope-split{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:24px;}
+.scope-box{border:1px solid var(--border);border-radius:11px;padding:16px 18px;background:var(--surface);}
+.scope-box.mine{border-color:var(--proj);background:var(--proj-soft);}
+.scope-head{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.scope-box.mine .scope-head{color:var(--proj-2);}
+.scope-box ul{margin:0 0 0 1rem;}
+.scope-box li{font-size:.83rem;margin-bottom:5px;}
+.scope-box li:last-child{margin-bottom:0;}
 
 /* ── 푸터 ── */
 footer{
