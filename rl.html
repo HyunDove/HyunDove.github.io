@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>슈퍼마리오 DQN 강화학습 · 김승현 포트폴리오</title>
+<meta name="description" content="픽셀 입력만으로 슈퍼마리오 1-1을 클리어하는 DQN 에이전트. 10,000 에피소드 학습 과정과 환경 구축 트러블슈팅 기록." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="alternate icon" href="assets/favicon.svg" />
+<link rel="stylesheet" href="assets/base.css" />
+<style>
+  /* 에피소드 진행 스트립 — 이 페이지 전용 */
+  .ep-strip{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:14px;margin-bottom:24px;
+  }
+  .ep-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;overflow:hidden;
+  }
+  .ep-card.clear{border-color:var(--rl);box-shadow:0 0 24px -10px rgba(255,107,74,.5);}
+  .ep-card img{
+    width:100%;display:block;aspect-ratio:256/240;object-fit:cover;
+    background:#000;image-rendering:pixelated;
+  }
+  .ep-meta{padding:11px 13px;}
+  .ep-name{
+    font-family:var(--font-mono);font-size:.74rem;color:var(--rl-2);
+    font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:6px;
+  }
+  .ep-desc{font-size:.75rem;color:var(--muted);line-height:1.55;}
+  .ep-card.clear .ep-name::after{
+    content:'CLEAR';font-size:.58rem;background:var(--rl);color:#1a0a05;
+    padding:1px 5px;border-radius:3px;letter-spacing:.05em;
+  }
+  /* 비교 하이라이트 */
+  .compare{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px;
+  }
+  @media (max-width:520px){ .compare{grid-template-columns:1fr;} }
+</style>
+</head>
+<body data-proj="rl">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="index.html">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
+      전체 프로젝트
+    </a>
+    <span class="topbar-title">Log 02 · Reinforcement Learning</span>
+    <div class="topbar-links">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/HyunDove/supermario-dqn" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="detail-hero">
+    <span class="eyebrow">Deep Learning · 강화학습</span>
+    <h1>슈퍼마리오 DQN 강화학습</h1>
+    <p class="lede">
+      게임 규칙을 하나도 알려주지 않고, <strong>84×84 흑백 픽셀과 보상 신호만으로</strong>
+      슈퍼마리오 1-1 스테이지를 클리어하는 에이전트를 학습했습니다.
+      완전 무작위 행동에서 출발해 10,000 에피소드 만에 스테이지를 완주했습니다.
+    </p>
+
+    <div class="meta-grid">
+      <div class="meta-cell"><div class="meta-key">기간</div><div class="meta-val">2026.06.25 – 07.01 (7일)</div></div>
+      <div class="meta-cell"><div class="meta-key">인원</div><div class="meta-val">1인 (개인 과제)</div></div>
+      <div class="meta-cell"><div class="meta-key">알고리즘</div><div class="meta-val">DQN (Deep Q-Network)</div></div>
+      <div class="meta-cell"><div class="meta-key">학습 환경</div><div class="meta-val">Colab · NVIDIA T4</div></div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">1-1</div><div class="kpi-label">스테이지 클리어 달성</div></div>
+      <div class="kpi"><div class="kpi-val">+168%</div><div class="kpi-label">평균 보상 (592 → 1,590)</div></div>
+      <div class="kpi"><div class="kpi-val">10,000</div><div class="kpi-label">학습 에피소드</div></div>
+      <div class="kpi"><div class="kpi-val">1.59M</div><div class="kpi-label">총 학습 스텝</div></div>
+    </div>
+
+    <div class="tech-list">
+      <span class="tech-tag">Python</span><span class="tech-tag">PyTorch</span>
+      <span class="tech-tag">CNN</span><span class="tech-tag">OpenAI Gym</span>
+      <span class="tech-tag">gym-super-mario-bros</span><span class="tech-tag">TensorBoard</span>
+      <span class="tech-tag">Streamlit</span><span class="tech-tag">Google Colab</span>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://supermario-dqn.streamlit.app/" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.293 7.294-1.414-1.414L17.585 5H13V3h8z"/></svg>
+        라이브 데모
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/supermario-dqn" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        소스 코드
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/supermario-dqn/releases/tag/v1.0" target="_blank" rel="noopener">수행내역서</a>
+    </div>
+  </header>
+
+  <!-- ── 0. 결과 먼저 ── -->
+  <section>
+    <span class="sec-num">01</span>
+    <h2>학습 전과 후</h2>
+    <p>
+      왼쪽은 학습을 시작하기 전(ε=1.0, 100% 무작위), 오른쪽은 10,000 에피소드 학습 후입니다.
+      같은 신경망이고 바뀐 것은 <strong>가중치뿐</strong>입니다.
+    </p>
+
+    <div class="compare">
+      <div class="ep-card">
+        <img src="assets/img/rl/mario-ep0000.gif" alt="학습 전 에이전트 — 제자리에서 무작위로 움직이는 마리오" loading="lazy" />
+        <div class="ep-meta">
+          <div class="ep-name">EP 0 · 학습 전</div>
+          <div class="ep-desc">100% 무작위 행동. 제자리 점프와 역방향 이동을 반복하며 거의 전진하지 못한다.</div>
+        </div>
+      </div>
+      <div class="ep-card clear">
+        <img src="assets/img/rl/mario-ep10000.gif" alt="학습 후 에이전트 — 장애물을 피하며 스테이지를 완주하는 마리오" loading="lazy" />
+        <div class="ep-meta">
+          <div class="ep-name">EP 10,000 · 학습 후</div>
+          <div class="ep-desc">장애물과 적을 회피하며 스테이지 끝의 깃대까지 도달, 1-1 클리어.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. 문제 정의 ── -->
+  <section>
+    <span class="sec-num">02</span>
+    <h2>무엇을 풀려고 했나</h2>
+    <p>
+      지도학습은 정답 레이블이 있어야 학습합니다. 하지만 게임 플레이에는 "이 순간의 정답 행동"이라는 레이블이 없습니다.
+      강화학습은 그 대신 <strong>보상 신호</strong>로 학습하는데, 이게 실제로 작동하는지를 직접 확인해보고 싶었습니다.
+    </p>
+    <p>
+      슈퍼마리오를 고른 이유는 보상 구조가 명확하기 때문입니다 —
+      오른쪽으로 전진하면 양의 보상, 시간이 지나면 음의 보상, 죽으면 −25.
+      이 단순한 신호만으로 <strong>점프 타이밍이나 적 회피 같은 복합 행동이 창발하는지</strong>가 관심사였습니다.
+    </p>
+    <p>
+      제약을 하나 걸었습니다. 에이전트에게는 게임 내부 상태(마리오 좌표, 적 위치 등)를 주지 않고
+      <strong>사람이 보는 것과 같은 화면 픽셀만</strong> 입력으로 줍니다.
+    </p>
+  </section>
+
+  <!-- ── 3. 전처리 ── -->
+  <section>
+    <span class="sec-num">03</span>
+    <h2>화면을 신경망 입력으로 바꾸기</h2>
+    <p>
+      원본 화면은 240×256 RGB입니다. 이걸 그대로 쓰면 연산량이 크고, 무엇보다
+      <strong>정지 화면 한 장으로는 마리오가 점프 중인지 낙하 중인지 알 수 없습니다.</strong>
+      네 단계 전처리로 이 두 문제를 해결했습니다.
+    </p>
+
+    <figure class="wide">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 860 150" role="img" aria-label="원본 240x256 RGB 화면이 프레임 스킵, 그레이스케일, 84x84 리사이즈, 4프레임 스택을 거쳐 4x84x84 텐서가 되는 전처리 파이프라인">
+        <defs>
+          <marker id="ar-rl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb020"/>
+          </marker>
+        </defs>
+
+        <rect x="8" y="42" width="118" height="62" rx="8" fill="#131320" stroke="#26263c"/>
+        <text x="67" y="66" fill="#eae9f5" font-size="12" text-anchor="middle" font-weight="600">원본 화면</text>
+        <text x="67" y="85" fill="#6f6e8c" font-size="10.5" text-anchor="middle" font-family="monospace">240×256×3</text>
+
+        <line x1="130" y1="73" x2="158" y2="73" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-rl)"/>
+
+        <rect x="162" y="42" width="140" height="62" rx="8" fill="#131320" stroke="#26263c"/>
+        <text x="232" y="62" fill="#eae9f5" font-size="12" text-anchor="middle" font-weight="600">SkipFrame</text>
+        <text x="232" y="79" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">4프레임당 1회 결정</text>
+        <text x="232" y="94" fill="#ff6b4a" font-size="9.5" text-anchor="middle" font-family="monospace">학습 4배 가속</text>
+
+        <line x1="306" y1="73" x2="334" y2="73" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-rl)"/>
+
+        <rect x="338" y="42" width="128" height="62" rx="8" fill="#131320" stroke="#26263c"/>
+        <text x="402" y="62" fill="#eae9f5" font-size="12" text-anchor="middle" font-weight="600">GrayScale</text>
+        <text x="402" y="79" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">3채널 → 1채널</text>
+        <text x="402" y="94" fill="#ff6b4a" font-size="9.5" text-anchor="middle" font-family="monospace">연산량 ⅓</text>
+
+        <line x1="470" y1="73" x2="498" y2="73" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-rl)"/>
+
+        <rect x="502" y="42" width="120" height="62" rx="8" fill="#131320" stroke="#26263c"/>
+        <text x="562" y="62" fill="#eae9f5" font-size="12" text-anchor="middle" font-weight="600">Resize</text>
+        <text x="562" y="79" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">→ 84×84</text>
+        <text x="562" y="94" fill="#ff6b4a" font-size="9.5" text-anchor="middle" font-family="monospace">입력 크기 통일</text>
+
+        <line x1="626" y1="73" x2="654" y2="73" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-rl)"/>
+
+        <rect x="658" y="42" width="194" height="62" rx="8" fill="#131320" stroke="#ff6b4a" stroke-width="1.5"/>
+        <text x="755" y="62" fill="#ffb020" font-size="12" text-anchor="middle" font-weight="600">FrameStack ×4</text>
+        <text x="755" y="79" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">(4, 84, 84)</text>
+        <text x="755" y="94" fill="#ff6b4a" font-size="9.5" text-anchor="middle" font-family="monospace">움직임 방향·속도 확보</text>
+
+        <text x="755" y="128" fill="#6f6e8c" font-size="10" text-anchor="middle" font-style="italic">한 장 → 네 장을 겹쳐야 "어디로 움직이는 중인지"가 생긴다</text>
+      </svg>
+      </div>
+      <figcaption>fig 3.1 — 전처리 4단계. 마지막 FrameStack이 정지 이미지에 없는 시간 정보를 만들어 준다.</figcaption>
+    </figure>
+
+    <p>
+      행동 공간은 <code>SIMPLE_MOVEMENT</code> 7개(오른쪽 이동·점프·달리기 조합 등)로 제한했습니다.
+      전체 버튼 조합을 다 열어두면 탐색 공간이 불필요하게 커지기 때문입니다.
+    </p>
+  </section>
+
+  <!-- ── 4. DQN 구조 ── -->
+  <section>
+    <span class="sec-num">04</span>
+    <h2>DQN 학습 루프</h2>
+    <p>
+      DQN의 핵심은 <strong>"이 상태에서 각 행동이 얼마나 가치 있는가(Q값)"를 신경망이 추정</strong>하도록 학습시키는 것입니다.
+      그런데 학습에 쓰는 목표값 자체를 같은 신경망이 만들면 학습이 발산합니다.
+      이를 막는 두 장치가 Replay Buffer와 Target Network입니다.
+    </p>
+
+    <figure class="wide">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 860 330" role="img" aria-label="환경에서 얻은 경험이 리플레이 버퍼에 저장되고, 랜덤 샘플링된 배치로 폴리시 네트워크를 학습하며, 타깃 네트워크는 1000스텝마다 동기화되는 DQN 학습 루프">
+        <defs>
+          <marker id="ar-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb020"/>
+          </marker>
+          <marker id="ar-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f6e8c"/>
+          </marker>
+        </defs>
+
+        <!-- 환경 -->
+        <rect x="20" y="30" width="170" height="66" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="105" y="56" fill="#eae9f5" font-size="12.5" text-anchor="middle" font-weight="600">게임 환경</text>
+        <text x="105" y="75" fill="#6f6e8c" font-size="10.5" text-anchor="middle" font-family="monospace">SuperMarioBros 1-1</text>
+
+        <!-- Policy Net -->
+        <rect x="330" y="30" width="200" height="66" rx="9" fill="#131320" stroke="#ff6b4a" stroke-width="1.5"/>
+        <text x="430" y="52" fill="#ffb020" font-size="12.5" text-anchor="middle" font-weight="600">Policy Network</text>
+        <text x="430" y="70" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">Conv×3 → FC×2</text>
+        <text x="430" y="85" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">(4,84,84) → Q값 7개</text>
+
+        <!-- 상태 화살표 -->
+        <line x1="194" y1="55" x2="326" y2="55" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-r)"/>
+        <text x="260" y="46" fill="#a9a8c4" font-size="10" text-anchor="middle" font-family="monospace">상태 s</text>
+
+        <!-- 행동 화살표 (되돌아감) -->
+        <path d="M 430 100 L 430 128 Q 430 138 420 138 L 115 138 Q 105 138 105 128 L 105 100" fill="none" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-r)"/>
+        <text x="268" y="132" fill="#a9a8c4" font-size="10.5" text-anchor="middle" font-family="monospace" dy="-8">행동 a — ε-greedy로 선택</text>
+
+        <!-- Replay Buffer -->
+        <rect x="20" y="182" width="240" height="66" rx="9" fill="#181828" stroke="#37374f"/>
+        <text x="140" y="207" fill="#eae9f5" font-size="12.5" text-anchor="middle" font-weight="600">Replay Buffer</text>
+        <text x="140" y="226" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">(s, a, r, s', done) · 최대 50,000</text>
+
+        <!-- 환경 → 버퍼 -->
+        <path d="M 105 100 L 105 150 Q 105 160 115 160 L 130 160 L 130 178" fill="none" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-g)"/>
+        <text x="152" y="158" fill="#6f6e8c" font-size="9.5" font-family="monospace">경험 저장</text>
+
+        <!-- 버퍼 → 학습 -->
+        <line x1="264" y1="215" x2="330" y2="215" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-r)"/>
+        <text x="297" y="205" fill="#a9a8c4" font-size="9.5" text-anchor="middle" font-family="monospace">랜덤 32건</text>
+
+        <!-- 학습 블록 -->
+        <rect x="334" y="182" width="196" height="66" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="432" y="207" fill="#eae9f5" font-size="12.5" text-anchor="middle" font-weight="600">Huber Loss 역전파</text>
+        <text x="432" y="226" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">Adam · lr 1e-4 · clip 10</text>
+
+        <!-- 학습 → policy net 갱신 -->
+        <path d="M 432 178 L 432 152 Q 432 142 442 142 L 500 142 Q 510 142 510 132 L 510 100" fill="none" stroke="#ffb020" stroke-width="1.6" marker-end="url(#ar-r)"/>
+        <text x="530" y="146" fill="#a9a8c4" font-size="9.5" font-family="monospace">가중치 갱신</text>
+
+        <!-- Target Net -->
+        <rect x="612" y="182" width="228" height="66" rx="9" fill="#131320" stroke="#26263c" stroke-dasharray="5 3"/>
+        <text x="726" y="207" fill="#eae9f5" font-size="12.5" text-anchor="middle" font-weight="600">Target Network</text>
+        <text x="726" y="226" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">목표 Q값 계산 전용 (고정)</text>
+
+        <line x1="608" y1="215" x2="538" y2="215" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-g)"/>
+        <text x="573" y="205" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">목표값</text>
+
+        <!-- policy → target 동기화 -->
+        <path d="M 530 63 L 726 63 Q 736 63 736 73 L 736 178" fill="none" stroke="#6f6e8c" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#ar-g)"/>
+        <text x="640" y="55" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">1,000 스텝마다 복사</text>
+
+        <text x="430" y="292" fill="#6f6e8c" font-size="10.5" text-anchor="middle" font-style="italic">Replay Buffer는 연속된 경험의 상관관계를 끊고, Target Network는 목표값이 흔들리는 것을 막는다</text>
+      </svg>
+      </div>
+      <figcaption>fig 4.1 — DQN 학습 루프. 두 안정화 장치(랜덤 샘플링·고정 타깃)가 없으면 목표값과 예측값이 같이 움직여 학습이 발산한다.</figcaption>
+    </figure>
+
+    <h3>신경망 구조</h3>
+    <pre><code>입력 (4, 84, 84)  <span class="c-comment"># 4프레임 스택 흑백</span>
+  Conv2d(4  → 32, k=8, s=4) + ReLU   → (32, 20, 20)
+  Conv2d(32 → 64, k=4, s=2) + ReLU   → (64,  9,  9)
+  Conv2d(64 → 64, k=3, s=1) + ReLU   → (64,  7,  7)
+  Flatten                            → 3136
+  Linear(3136 → 512) + ReLU
+  Linear(512  → 7)                   <span class="c-comment"># 행동별 Q값</span></code></pre>
+
+    <h3>하이퍼파라미터</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>항목</th><th>값</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>학습률</td><td>1e-4</td><td>Adam 옵티마이저</td></tr>
+          <tr><td>할인율 γ</td><td>0.9</td><td>미래 보상의 현재가치 비율</td></tr>
+          <tr><td>ε (탐험률)</td><td>1.0 → 0.1</td><td>decay 0.99999 — 무작위에서 최적 행동으로</td></tr>
+          <tr><td>배치 크기</td><td>32</td><td>1회 학습에 쓰는 경험 수</td></tr>
+          <tr><td>Replay Buffer</td><td>50,000</td><td>경험 저장 상한</td></tr>
+          <tr><td>Target 동기화</td><td>1,000 스텝</td><td>학습 안정화 주기</td></tr>
+          <tr><td>Gradient Clipping</td><td>max_norm 10</td><td>기울기 폭발 방지</td></tr>
+          <tr><td>손실 함수</td><td>SmoothL1 (Huber)</td><td>MSE보다 이상치에 강건</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 5. 학습 결과 ── -->
+  <section>
+    <span class="sec-num">05</span>
+    <h2>10,000 에피소드 동안 일어난 일</h2>
+
+    <div class="ep-strip">
+      <div class="ep-card">
+        <img src="assets/img/rl/mario-ep0000.gif" alt="EP 0 무작위 행동" loading="lazy" />
+        <div class="ep-meta"><div class="ep-name">EP 0</div><div class="ep-desc">무작위 행동. 진전 없음</div></div>
+      </div>
+      <div class="ep-card">
+        <img src="assets/img/rl/mario-ep2000.gif" alt="EP 2000 우측 전진 학습" loading="lazy" />
+        <div class="ep-meta"><div class="ep-name">EP 2,000</div><div class="ep-desc">"오른쪽으로 간다"를 습득</div></div>
+      </div>
+      <div class="ep-card">
+        <img src="assets/img/rl/mario-ep5000.gif" alt="EP 5000 장애물 회피" loading="lazy" />
+        <div class="ep-meta"><div class="ep-name">EP 5,000</div><div class="ep-desc">장애물 회피 패턴 등장</div></div>
+      </div>
+      <div class="ep-card">
+        <img src="assets/img/rl/mario-ep7000.gif" alt="EP 7000 전진 전략 고도화" loading="lazy" />
+        <div class="ep-meta"><div class="ep-name">EP 7,000</div><div class="ep-desc">점프 타이밍 정교화</div></div>
+      </div>
+      <div class="ep-card clear">
+        <img src="assets/img/rl/mario-ep10000.gif" alt="EP 10000 스테이지 클리어" loading="lazy" />
+        <div class="ep-meta"><div class="ep-name">EP 10,000</div><div class="ep-desc">1-1 스테이지 완주</div></div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>체크포인트</th><th>학습 스텝</th><th>ε</th><th>최근 100회 평균 보상</th><th>전체 최고 보상</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EP 0</td><td>0</td><td>1.0000</td><td>592.0</td><td>592.0</td></tr>
+          <tr><td>EP 2,000</td><td>269,649</td><td>0.1000</td><td>860.7</td><td>2,874.0</td></tr>
+          <tr><td>EP 5,000</td><td>686,248</td><td>0.1000</td><td>1,222.6</td><td>3,059.0</td></tr>
+          <tr><td>EP 7,000</td><td>1,019,666</td><td>0.1000</td><td>1,387.2</td><td>3,059.0</td></tr>
+          <tr class="best-row"><td>EP 10,000</td><td>1,593,659</td><td>0.1000</td><td>1,590.0</td><td>3,062.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="assets/img/rl/training-curve.png" alt="전체 학습 곡선 — 에피소드별 보상과 100회 이동평균이 우상향" loading="lazy" />
+      <figcaption>fig 5.1 — 전체 학습 곡선(EP 0 → 10,000). 개별 보상은 크게 흔들리지만 이동 평균은 꾸준히 우상향한다.</figcaption>
+    </figure>
+
+    <h3>곡선에서 읽은 것</h3>
+    <p>
+      가장 눈에 띈 건 <strong>ε이 EP 2,000 이전(약 23만 스텝)에 이미 최솟값 0.1에 도달</strong>했다는 점입니다.
+      즉 전체 학습의 80% 이상이 탐험이 거의 없는 <strong>활용(exploitation) 구간</strong>이었습니다.
+      그럼에도 EP 2,000의 평균 보상 860에서 EP 10,000의 1,590까지 계속 올랐다는 건,
+      성능 향상이 새로운 탐험이 아니라 <strong>이미 모은 경험을 반복 학습하며 Q값 추정이 정교해진 결과</strong>라는 뜻입니다.
+      Replay Buffer가 실제로 일하고 있었다는 근거로 읽었습니다.
+    </p>
+    <p>
+      또 하나는 개별 에피소드 보상의 <strong>분산이 끝까지 줄지 않았다</strong>는 점입니다.
+      EP 10,000에서도 최소 보상은 233으로 초기와 비슷합니다. ε=0.1이 남아 있어
+      10% 확률의 무작위 행동이 낙사로 이어지는 경우가 계속 존재하기 때문입니다.
+      "평균은 올랐지만 안정적으로 클리어하는 것은 아니다"가 정확한 표현입니다.
+    </p>
+  </section>
+
+  <!-- ── 6. 트러블슈팅 ── -->
+  <section>
+    <span class="sec-num">06</span>
+    <h2>막힌 지점과 해결</h2>
+    <p>
+      역설적이게도 <strong>DQN 알고리즘 자체보다 환경을 돌아가게 만드는 데 훨씬 오래 걸렸습니다.</strong>
+      <code>gym-super-mario-bros</code>는 오래된 라이브러리라 최신 numpy·gym과 충돌했고, 이를 해결하는 과정이 초반 작업의 대부분이었습니다.
+    </p>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">01</span>
+        <span class="trouble-title">numpy 2.0 · gym 0.26 파괴적 변경으로 학습 시작조차 불가</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <p>Colab에서 학습을 시작하자마자 오류가 연쇄 발생했습니다.</p>
+          <pre><code><span class="c-bad">AttributeError</span>: module 'numpy' has no attribute 'bool8'
+<span class="c-bad">ValueError</span>: not enough values to unpack (expected 5, got 4)</code></pre>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p>세 오류의 뿌리가 모두 같았습니다 — <strong>서드파티 라이브러리가 상위 의존성의 파괴적 변경을 따라가지 못한 것</strong>입니다.</p>
+          <ul>
+            <li><code>np.bool8</code>이 numpy 2.0에서 완전히 제거됐는데 <code>nes-py</code>·<code>gym</code> 내부가 이를 사용 중</li>
+            <li>numpy 2.0에서 uint8 자동 형변환이 사라져 <code>self.ram[x] * 256</code>이 오버플로우</li>
+            <li>gym 0.26의 <code>TimeLimit</code>은 5-tuple을 기대하지만 <code>gym-super-mario-bros</code>는 4-tuple 반환</li>
+          </ul>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>라이브러리를 포크해 고치는 대신, <strong>설치 직후 런타임에 소스를 일괄 패치</strong>하는 방식을 택했습니다. Colab은 세션마다 환경이 초기화되므로 재현성이 더 중요하다고 판단했습니다.</p>
+          <pre><code><span class="c-comment"># 1) 제거된 별칭 복원</span>
+if not hasattr(np, 'bool8'):
+    np.bool8 = np.bool_
+
+<span class="c-comment"># 2) 오버플로우 — 연산부에 int() 캐스팅 삽입</span>
+p1 = re.compile(r'(self\.ram\[[^\]]+\])\s*\*\s*(\d+)')
+patched = p1.sub(lambda m: f'int({m.group(1)}) * {m.group(2)}', content)
+
+<span class="c-comment"># 3) 4-tuple / 5-tuple 양쪽 지원</span>
+result = self.env.step(action)
+if len(result) == 4:
+    observation, reward, terminated, info = result
+    truncated = False
+else:
+    observation, reward, terminated, truncated, info = result</code></pre>
+          <p>이 패치 코드를 <code>colab/train.ipynb</code>의 패키지 설치 직후 셀에 넣어, 새 세션에서도 자동 적용되게 했습니다.</p>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>오류 메시지 세 개가 서로 달라도 원인은 하나일 수 있습니다. 개별 증상을 각각 때우는 대신 <strong>"공통 원인이 뭔가"를 먼저 물은 것</strong>이 시간을 줄였습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">02</span>
+        <span class="trouble-title">저장한 플레이 영상이 초록색 노이즈로 깨짐</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <p>에피소드 영상을 저장한 뒤 재생하면 화면이 초록색 노이즈로 깨지거나 첫 프레임만 반복됐습니다. 학습은 정상이라 더 헷갈렸습니다.</p>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p><code>nes-py</code>의 <code>render()</code>는 내부 <strong>C++ 버퍼에 대한 참조</strong>를 반환합니다. 루프가 끝나고 <code>env.close()</code>가 호출되면 그 메모리가 해제되는데, 리스트에 담아둔 값들도 같은 메모리를 가리키고 있어 전부 무효화된 것이었습니다. 즉 <strong>영상 저장 시점에는 이미 프레임이 존재하지 않았습니다.</strong></p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>참조가 아니라 값을 복사해 독립적인 메모리를 확보했습니다.</p>
+          <pre><code><span class="c-bad">- frames.append(frame)</span>                        <span class="c-comment"># 참조 저장 → close() 후 손상</span>
+<span class="c-good">+ frames.append(np.ascontiguousarray(frame, dtype=np.uint8))</span></code></pre>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>파이썬에서도 C 확장 라이브러리를 쓰면 <strong>메모리 수명을 직접 신경 써야 합니다.</strong> "값을 담았다"고 생각한 것이 사실은 참조였고, 이 구분이 버그의 전부였습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">03</span>
+        <span class="trouble-title">Colab에서 <code>nes-py</code> 빌드 실패</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <pre><code><span class="c-bad">error</span>: command 'cmake' failed: No such file or directory
+Building wheel for nes-py (pyproject.toml) ... error</code></pre>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p><code>nes-py</code>는 C++ NES 에뮬레이터를 포함해 cmake 빌드가 필요한데 Colab 기본 이미지에 cmake가 없었고, 최신 <code>setuptools</code>가 빌드 격리를 강제해 시스템 cmake를 찾지 못하는 문제가 겹쳐 있었습니다.</p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>세 가지를 <strong>순서대로</strong> 적용해야 통과했습니다.</p>
+          <pre><code>!apt-get install -y cmake                        <span class="c-comment"># 빌드 도구 선설치</span>
+!pip install "setuptools>=65.5.1,&lt;82"            <span class="c-comment"># 버전 고정</span>
+!pip install nes-py==8.2.1 --no-build-isolation  <span class="c-comment"># 격리 비활성화</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. 회고 ── -->
+  <section>
+    <span class="sec-num">07</span>
+    <h2>배운 점과 한계</h2>
+
+    <h3>가장 크게 남은 것</h3>
+    <p>
+      픽셀 입력과 보상 신호만으로 <strong>사전 지식 없이 스테이지를 완주하는 에이전트가 실제로 만들어진다</strong>는 것을
+      직접 확인한 경험이 가장 컸습니다. 특히 "적을 피해라"를 코딩한 적이 없는데
+      회피 행동이 학습 중반에 나타난 것이 인상적이었습니다.
+    </p>
+
+    <h3>다시 한다면</h3>
+    <ul>
+      <li><strong>ε 감소 스케줄을 다시 설계할 것.</strong> 23만 스텝 만에 최솟값에 도달해 전체 학습의 대부분이 탐험 없이 진행됐습니다. 더 느리게 줄였다면 더 다양한 전략을 찾았을 가능성이 있습니다.</li>
+      <li><strong>Double DQN·Dueling DQN을 비교했을 것.</strong> 기본 DQN은 Q값을 과대추정하는 경향이 알려져 있는데, 이번엔 단일 알고리즘만 써서 비교 근거가 없습니다.</li>
+      <li><strong>평가를 ε=0으로 분리했을 것.</strong> 학습용 ε=0.1을 그대로 두고 측정해 보상 분산이 커졌습니다. 성능 측정은 탐험을 끈 상태에서 별도로 했어야 정확합니다.</li>
+    </ul>
+
+    <h3>남은 한계</h3>
+    <p>
+      1-1 스테이지 <strong>하나에만</strong> 학습된 에이전트입니다. 다른 스테이지에서는 동작을 보장할 수 없고,
+      일반화 성능은 검증하지 않았습니다. 또한 클리어가 매 시도마다 재현되는 것이 아니라
+      학습 후반의 일부 에피소드에서 달성된 결과입니다.
+    </p>
+  </section>
+
+  <nav class="pager" aria-label="다른 프로젝트">
+    <a class="pager-card to-llm" href="llm.html">
+      <div class="pg-label">다음 · Log 03</div>
+      <div class="pg-title">분리수거 판별 어시스턴트 →</div>
+    </a>
+    <a class="pager-card to-ml" href="ml.html">
+      <div class="pg-label">Log 01</div>
+      <div class="pg-title">대출 금리 예측 모델 →</div>
+    </a>
+  </nav>
+
+</div>
+
+<footer>
+  <p>© 2026 김승현 · <a href="https://github.com/HyunDove" target="_blank" rel="noopener">github.com/HyunDove</a></p>
+</footer>
+
+</body>
+</html>

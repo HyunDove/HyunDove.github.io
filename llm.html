@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>분리수거 판별 어시스턴트 · 김승현 포트폴리오</title>
+<meta name="description" content="사진 한 장으로 재질을 판별하고 분리배출 방법을 안내하는 AI. YOLO·EfficientNet·VLM·RAG 4단 파이프라인과 폴백 설계 기록." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="alternate icon" href="assets/favicon.svg" />
+<link rel="stylesheet" href="assets/base.css" />
+</head>
+<body data-proj="llm">
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <a class="back-link" href="index.html">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg>
+      전체 프로젝트
+    </a>
+    <span class="topbar-title">Log 03 · LLM · Vision</span>
+    <div class="topbar-links">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/HyunDove/trash-check" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="detail-hero">
+    <span class="eyebrow">LLM · Computer Vision</span>
+    <h1>분리수거 판별 어시스턴트</h1>
+    <p class="lede">
+      쓰레기 사진 한 장을 올리면 재질을 판별하고, <strong>환경부 가이드라인을 근거로</strong>
+      어떻게 버려야 하는지 답해주는 AI입니다. 판별(비전)과 안내(LLM+문서)를 하나의 파이프라인으로 묶었습니다.
+    </p>
+
+    <div class="meta-grid">
+      <div class="meta-cell"><div class="meta-key">기간</div><div class="meta-val">2026.07.02 – 07.06 (5일)</div></div>
+      <div class="meta-cell"><div class="meta-key">인원</div><div class="meta-val">1인 (개인 과제)</div></div>
+      <div class="meta-cell"><div class="meta-key">구성</div><div class="meta-val">4단 판별 파이프라인</div></div>
+      <div class="meta-cell"><div class="meta-key">배포</div><div class="meta-val">Streamlit Cloud</div></div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">93.66%</div><div class="kpi-label">CNN 검증 정확도</div></div>
+      <div class="kpi"><div class="kpi-val">2,527</div><div class="kpi-label">학습 이미지 (5클래스)</div></div>
+      <div class="kpi"><div class="kpi-val">4단</div><div class="kpi-label">파이프라인 (폴백 4중)</div></div>
+      <div class="kpi"><div class="kpi-val">54</div><div class="kpi-label">RAG 청크 (82 → 54 정제)</div></div>
+    </div>
+
+    <div class="tech-list">
+      <span class="tech-tag">Python</span><span class="tech-tag">PyTorch</span>
+      <span class="tech-tag">YOLOv8n</span><span class="tech-tag">EfficientNet-B0</span>
+      <span class="tech-tag">LangChain</span><span class="tech-tag">Chroma</span>
+      <span class="tech-tag">Ollama</span><span class="tech-tag">Hugging Face</span><span class="tech-tag">Streamlit</span>
+    </div>
+
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://trash-check.streamlit.app/" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.293 7.294-1.414-1.414L17.585 5H13V3h8z"/></svg>
+        라이브 데모
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/trash-check" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        소스 코드
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/HyunDove/trash-check/releases/tag/v1.0.0" target="_blank" rel="noopener">수행내역서</a>
+    </div>
+  </header>
+
+  <!-- ── 1. 문제 정의 ── -->
+  <section>
+    <span class="sec-num">01</span>
+    <h2>무엇을 풀려고 했나</h2>
+    <p>
+      분리수거가 헷갈리는 이유는 두 가지입니다 — <strong>이게 무슨 재질인지 모르겠고,
+      알아도 어떻게 버려야 하는지 모릅니다.</strong>
+    </p>
+    <p>
+      이미지 분류 CNN만으로는 절반만 풀립니다. "플라스틱입니다"까지는 말할 수 있어도
+      "라벨을 떼고 내용물을 비운 뒤 투명 페트 전용 수거함에" 같은 안내는 못 합니다.
+      그렇다고 LLM만 쓰면 근거 없이 그럴듯한 답을 지어낼 위험이 있습니다.
+    </p>
+    <p>
+      그래서 <strong>판별은 비전 모델이, 안내는 공식 문서를 검색하는 LLM이</strong> 맡는 구조로 설계했습니다.
+      5일이라는 일정 제약이 있어, 라벨링 작업이 필요 없는 구성(사전학습 YOLO + 폴더 분류 데이터셋 전이학습)을 선택했습니다.
+    </p>
+  </section>
+
+  <!-- ── 2. 아키텍처 ── -->
+  <section>
+    <span class="sec-num">02</span>
+    <h2>4단 판별 파이프라인</h2>
+    <p>
+      사진 한 장이 답변이 되기까지 네 단계를 거칩니다.
+      중요한 건 <strong>각 단계가 실패해도 앱이 죽지 않는다</strong>는 점입니다 — 모든 단계에 폴백 경로를 뒀습니다.
+    </p>
+
+    <figure class="wide">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 860 400" role="img" aria-label="사진 업로드 후 YOLO 게이트로 크롭, EfficientNet CNN 분류, VLM 최종 판정, RAG 챗봇 답변으로 이어지는 4단 파이프라인과 각 단계의 폴백 경로">
+        <defs>
+          <marker id="ar-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6ff0d8"/>
+          </marker>
+          <marker id="ar-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6f6e8c"/>
+          </marker>
+        </defs>
+
+        <!-- 입력 -->
+        <rect x="20" y="20" width="150" height="48" rx="8" fill="#181828" stroke="#37374f"/>
+        <text x="95" y="41" fill="#eae9f5" font-size="12" text-anchor="middle" font-weight="600">사진 업로드</text>
+        <text x="95" y="58" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">RGB 원본</text>
+
+        <line x1="95" y1="72" x2="95" y2="96" stroke="#6ff0d8" stroke-width="1.6" marker-end="url(#ar-l)"/>
+
+        <!-- [1] YOLO -->
+        <rect x="20" y="100" width="330" height="66" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="34" y="122" fill="#2fd9c4" font-size="10.5" font-family="monospace">[1]</text>
+        <text x="62" y="122" fill="#eae9f5" font-size="12.5" font-weight="600">YOLO 게이트</text>
+        <text x="34" y="141" fill="#6f6e8c" font-size="10" font-family="monospace">YOLOv8n (COCO 사전학습, 파인튜닝 없음)</text>
+        <text x="34" y="157" fill="#a9a8c4" font-size="10" font-family="monospace">면적 최대 물체 1개만 crop</text>
+
+        <!-- YOLO 폴백 -->
+        <path d="M 354 133 L 400 133 Q 410 133 410 143 L 410 152" fill="none" stroke="#6f6e8c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ar-fb)"/>
+        <rect x="360" y="156" width="180" height="38" rx="7" fill="#181828" stroke="#37374f" stroke-dasharray="4 3"/>
+        <text x="450" y="172" fill="#a9a8c4" font-size="10" text-anchor="middle" font-family="monospace">0개 감지 / crop 예외</text>
+        <text x="450" y="186" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">→ 원본 이미지 그대로 사용</text>
+
+        <line x1="95" y1="170" x2="95" y2="194" stroke="#6ff0d8" stroke-width="1.6" marker-end="url(#ar-l)"/>
+
+        <!-- [2] CNN -->
+        <rect x="20" y="198" width="330" height="66" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="34" y="220" fill="#2fd9c4" font-size="10.5" font-family="monospace">[2]</text>
+        <text x="62" y="220" fill="#eae9f5" font-size="12.5" font-weight="600">CNN 재질 분류</text>
+        <text x="34" y="239" fill="#6f6e8c" font-size="10" font-family="monospace">EfficientNet-B0 전이학습 (CPU 추론)</text>
+        <text x="34" y="255" fill="#a9a8c4" font-size="10" font-family="monospace">5클래스 확률 · 검증 정확도 93.66%</text>
+
+        <line x1="95" y1="268" x2="95" y2="292" stroke="#6ff0d8" stroke-width="1.6" marker-end="url(#ar-l)"/>
+
+        <!-- [3] VLM -->
+        <rect x="20" y="296" width="330" height="70" rx="9" fill="#131320" stroke="#2fd9c4" stroke-width="1.5"/>
+        <text x="34" y="318" fill="#2fd9c4" font-size="10.5" font-family="monospace">[3]</text>
+        <text x="62" y="318" fill="#6ff0d8" font-size="12.5" font-weight="600">VLM 최종 판정</text>
+        <text x="34" y="337" fill="#6f6e8c" font-size="10" font-family="monospace">재질 + 이물질을 한 번에 판단</text>
+        <text x="34" y="353" fill="#a9a8c4" font-size="10" font-family="monospace">로컬 Ollama / 배포 HF API</text>
+
+        <!-- VLM 폴백 -->
+        <path d="M 354 331 L 400 331 Q 410 331 410 321 L 410 312" fill="none" stroke="#6f6e8c" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ar-fb)"/>
+        <rect x="360" y="272" width="180" height="40" rx="7" fill="#181828" stroke="#37374f" stroke-dasharray="4 3"/>
+        <text x="450" y="288" fill="#a9a8c4" font-size="10" text-anchor="middle" font-family="monospace">토큰·크레딧·모델 실패</text>
+        <text x="450" y="302" fill="#6f6e8c" font-size="9.5" text-anchor="middle" font-family="monospace">→ CNN + 확신도 70% 기준</text>
+
+        <!-- [4] RAG -->
+        <rect x="580" y="100" width="260" height="120" rx="9" fill="#131320" stroke="#26263c"/>
+        <text x="596" y="124" fill="#2fd9c4" font-size="10.5" font-family="monospace">[4]</text>
+        <text x="624" y="124" fill="#eae9f5" font-size="12.5" font-weight="600">RAG 챗봇</text>
+        <text x="596" y="146" fill="#6f6e8c" font-size="10" font-family="monospace">판별 재질 + 사용자 질문</text>
+        <text x="596" y="164" fill="#6f6e8c" font-size="10" font-family="monospace">↓</text>
+        <text x="596" y="182" fill="#a9a8c4" font-size="10" font-family="monospace">Chroma 벡터DB 검색 (k=8)</text>
+        <text x="596" y="200" fill="#a9a8c4" font-size="10" font-family="monospace">→ 근거 기반 답변</text>
+
+        <!-- 판정결과 → RAG (폴백 박스 아래로 우회) -->
+        <path d="M 354 350 L 548 350 Q 570 350 570 328 L 570 162 Q 570 146 584 146" fill="none" stroke="#6ff0d8" stroke-width="1.6" marker-end="url(#ar-l)"/>
+        <text x="450" y="343" fill="#a9a8c4" font-size="10.5" text-anchor="middle" font-family="monospace">판별된 재질</text>
+
+        <!-- 문서 -->
+        <rect x="580" y="240" width="260" height="46" rx="7" fill="#181828" stroke="#37374f"/>
+        <text x="710" y="259" fill="#a9a8c4" font-size="10.5" text-anchor="middle" font-family="monospace">환경부 가이드라인 PDF</text>
+        <text x="710" y="275" fill="#6f6e8c" font-size="10" text-anchor="middle" font-family="monospace">+ 생활법령 문서 · 54청크</text>
+        <line x1="710" y1="236" x2="710" y2="224" stroke="#6f6e8c" stroke-width="1.4" marker-end="url(#ar-fb)"/>
+
+        <text x="722" y="386" fill="#6f6e8c" font-size="10.5" text-anchor="middle" font-style="italic">점선 = 폴백 경로 · 어느 단계가 실패해도 앱은 답을 낸다</text>
+      </svg>
+      </div>
+      <figcaption>fig 2.1 — 4단 파이프라인. 실선은 정상 경로, 점선은 폴백. VLM이 완전히 죽어도 CNN 경로로 서비스가 유지된다.</figcaption>
+    </figure>
+
+    <h3>최종 판정 로직</h3>
+    <p>
+      VLM을 최종 판단자로 두되, 사용할 수 없을 때는 CNN 확신도로 <strong>보수적으로</strong> 판정합니다.
+      확신이 낮으면 재활용으로 안내하지 않고 일반쓰레기로 안내합니다 — 잘못된 재활용 배출이 더 큰 문제이기 때문입니다.
+    </p>
+    <pre><code>if vlm_result:                      <span class="c-comment"># VLM 가능 → 최종 채택</span>
+    if vlm_result["contaminated"]:
+        return "trash", "이물질 감지 — 씻으면 재활용 가능"
+    return vlm_result["material"], "VLM 판정"
+
+if cnn_label == "trash":            <span class="c-comment"># VLM 불가 → CNN 폴백</span>
+    return "trash", "CNN이 일반쓰레기로 분류"
+if cnn_conf &lt; 0.70:                 <span class="c-comment"># 확신도 낮음 → 보수적 안내</span>
+    return "trash", "확신도가 낮아 일반쓰레기로 안내"
+return cnn_label, "CNN 판정"</code></pre>
+  </section>
+
+  <!-- ── 3. CNN 학습 ── -->
+  <section>
+    <span class="sec-num">03</span>
+    <h2>CNN 전이학습</h2>
+    <p>
+      Stanford CS229의 공개 데이터셋 <strong>TrashNet</strong>을 내려받아 원본 6클래스를 과제에 맞는 5클래스로 재구성했습니다
+      (plastic / can / glass / paper / trash, 총 2,527장).
+      ImageNet 사전학습 EfficientNet-B0의 <strong>분류 헤드만 5클래스로 교체</strong>하는 전이학습 방식입니다.
+    </p>
+    <p>
+      클래스 불균형이 컸습니다 — paper(997장)가 trash(137장)의 약 7배였습니다.
+      <code>CrossEntropyLoss</code>에 <code>total / (num_classes × count)</code> 가중치를 적용해 보정했습니다.
+    </p>
+
+    <figure>
+      <img src="assets/img/llm/training-curve.png" alt="학습 곡선 — Train Loss 감소, Validation Accuracy가 8 epoch 근처에서 93% 수렴" loading="lazy" />
+      <figcaption>fig 3.1 — 학습 곡선. 검증 정확도가 8 epoch 부근부터 93% 안팎으로 수렴한다.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/img/llm/confusion-matrix.png" alt="5클래스 혼동행렬 — plastic과 can 사이 혼동이 상대적으로 많음" loading="lazy" />
+      <figcaption>fig 3.2 — 혼동행렬. <code>plastic</code> ↔ <code>can</code> 혼동이 두드러진다.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/img/llm/class-metrics.png" alt="클래스별 Precision, Recall, F1 지표 막대그래프" loading="lazy" />
+      <figcaption>fig 3.3 — 클래스별 지표. 데이터가 가장 적은 <code>trash</code>도 가중치 적용으로 F1 80%대를 확보했다.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── 4. 트러블슈팅 ── -->
+  <section>
+    <span class="sec-num">04</span>
+    <h2>막힌 지점과 해결</h2>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">01</span>
+        <span class="trouble-title">정확도 93%인 CNN이 실제 사진에서는 자꾸 틀림</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <p>검증 정확도는 93.66%인데, 직접 찍은 사진에서는 오분류가 반복됐습니다. 대표적으로 <strong>기름때 묻은 플라스틱 그릇을 캔으로 분류</strong>했습니다.</p>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p>
+            데이터 증강을 강화(RandomResizedCrop·강한 ColorJitter·RandomErasing)하고 에폭을 15→20으로 늘려 재학습했지만
+            <strong>검증 정확도는 그대로였습니다.</strong> 이 결과가 오히려 원인을 알려줬습니다 —
+            문제는 모델의 학습 부족이 아니라 <strong>도메인 차이</strong>였습니다.
+            TrashNet은 흰 배경 스튜디오 사진인데 실제 사진은 배경·조명·오염이 제각각이라,
+            검증셋(같은 스튜디오 사진)에서는 아무리 잘해도 실사진 성능을 대변하지 못했습니다.
+          </p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>
+            증강으로 도메인 격차를 메우려는 시도를 중단하고, <strong>실사진 일반화가 강한 범용 VLM을 최종 판단자로 승격</strong>했습니다.
+            CNN은 유지하되 폴백 경로로 내렸습니다. VLM은 재질과 이물질 여부를 한 번에 판단할 수 있어
+            "씻으면 재활용 가능" 같은 안내까지 가능해진 것이 부수적 이득이었습니다.
+          </p>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>
+            <strong>검증 정확도가 오르지 않는 것도 정보입니다.</strong> 증강을 늘려도 개선이 없다는 사실이
+            "학습이 부족한 게 아니라 데이터 분포 자체가 다르다"는 진단으로 이어졌습니다.
+            지표가 좋은데 실사용이 나쁘면, 지표가 측정하는 대상을 의심해야 합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">02</span>
+        <span class="trouble-title">RAG가 플라스틱 질문에 엉뚱한 문서만 반환</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <p>
+            플라스틱·캔에 대해 "기본 분리배출 방법을 알려줘"라고 물으면, 문서에 분명히 있는
+            <code>## 플라스틱류 분리배출 요령</code> 섹션이 검색되지 않고
+            매번 도자기류·코르크따개·돋보기 같은 <strong>무관한 잡화 안내만</strong> 나왔습니다.
+            유리·종이 질의는 정상이었습니다.
+          </p>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p>
+            <code>similarity_search_with_score</code>로 실제 점수를 찍어보니, 플라스틱 청크가
+            전체 82개 중 <strong>77위(거리 9.58, 1위는 4.19)</strong>로 사실상 최하위였습니다.
+          </p>
+          <p>
+            범인은 환경부 PDF의 26~33페이지, "분리 배출 품목 사전" 부록이었습니다.
+            나무젓가락부터 항아리까지 가나다순으로 나열된 표라서
+            <strong>"배출"·"종량제" 같은 단어가 청크 하나당 10회 이상 반복</strong>됩니다.
+            다국어 MiniLM 임베딩이 이 키워드 밀도에 강하게 끌려가면서, 정작 재질별 요령 문서를 계속 밀어냈습니다.
+          </p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>해당 부록 페이지를 인덱싱에서 제외하고 벡터DB를 재구축했습니다. 82청크 → 54청크로 줄었고, 플라스틱 질의에서 정식 "합성수지류 PET/PVC/PE" 챕터가 상위에 검색됐습니다.</p>
+          <pre><code><span class="c-comment"># rag/ingest.py</span>
+EXCLUDED_PDF_PAGES = set(range(26, 34))   <span class="c-comment"># 품목 사전 부록 제외</span>
+
+pdf_docs = PyPDFLoader(str(path)).load()
+docs.extend(d for d in pdf_docs
+            if d.metadata.get("page") not in EXCLUDED_PDF_PAGES)</code></pre>
+          <p><code>k=4 → 8</code> 조정도 함께 했지만, <strong>k만 올렸을 때는 전혀 개선되지 않았습니다.</strong> 근본 원인은 페이지 제외였습니다.</p>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>
+            RAG 품질이 나쁘면 <code>k</code>부터 올리고 싶어지지만, 원인이 특정 문서의 <strong>구조적 노이즈</strong>(반복 키워드가 많은 색인·표·부록)라면
+            k를 아무리 늘려도 해결되지 않습니다. <strong>실제 순위와 거리 값을 까보는 진단이 먼저</strong>였습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">03</span>
+        <span class="trouble-title">외부 API 실패를 조용히 삼켜서 원인 파악이 불가능했던 문제</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <p>VLM 판정이 동작하지 않는데 앱은 멀쩡히 CNN 폴백으로 돌아가서, <strong>무엇이 왜 실패했는지 알 수 없었습니다.</strong></p>
+          <pre><code><span class="c-bad">model_not_supported</span>: 'Qwen/Qwen2.5-VL-7B-Instruct' is not
+supported by any provider you have enabled.
+
+<span class="c-bad">402 Payment Required</span>: You have depleted your monthly
+included credits.</code></pre>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p>
+            두 가지가 겹쳤습니다. HF Inference Providers는 <strong>계정에 활성화된 provider에 따라 호출 가능한 모델이 달라지고</strong>,
+            무료 크레딧이 소진되면 402가 납니다. 하지만 진짜 문제는 따로 있었습니다 —
+            코드가 <code>except: return None</code> 형태로 실패를 삼키고 있어서 화면에는 아무 단서도 남지 않았습니다.
+          </p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <ul>
+            <li><strong>모델 다중 폴백</strong> — Llama-3.2-11B-Vision → Qwen2.5-VL-72B → Qwen2-VL-7B 순으로 자동 재시도</li>
+            <li><strong>실패 사유를 항상 반환</strong> — <code>vlm_judge()</code>가 언제나 <code>{material, contaminated, raw}</code> dict를 반환하고, <code>raw</code>에 어떤 모델이 왜 실패했는지 기록해 앱의 디버그 패널에서 바로 확인 가능하게 함</li>
+            <li><strong>전면 실패해도 서비스 유지</strong> — <code>material</code>이 <code>None</code>이면 CNN 경로로 자연스럽게 폴백</li>
+          </ul>
+          <pre><code><span class="c-comment"># 실패해도 dict 반환 — raw에 원인 기록</span>
+{"material": None, "contaminated": False, "raw": "API 오류: ..."}</code></pre>
+        </div>
+        <div class="lesson">
+          <span class="lesson-tag">배운 점</span>
+          <p>
+            외부 API를 폴백 설계에 넣을 때는 <strong>실패 사유를 화면이나 로그에서 바로 볼 수 있어야 합니다.</strong>
+            <code>except Exception: return None</code>처럼 조용히 삼키면 폴백이 잘 동작할수록 문제가 더 안 보입니다.
+            "왜 안 되지?"를 알아내는 데만 여러 번의 시행착오가 필요했습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trouble">
+      <div class="trouble-head">
+        <span class="trouble-idx">04</span>
+        <span class="trouble-title">배포 환경에서 <code>cv2</code> import 실패</span>
+      </div>
+      <div class="trouble-body">
+        <div class="step symptom">
+          <div class="step-label">증상</div>
+          <pre><code><span class="c-bad">ImportError</span>: libGL.so.1: cannot open shared object file</code></pre>
+        </div>
+        <div class="step cause">
+          <div class="step-label">원인</div>
+          <p>
+            <code>ultralytics</code>가 기본으로 끌어오는 <code>opencv-python</code>은 <strong>GUI(X11) 빌드</strong>입니다.
+            로컬에서는 문제없지만 GUI가 없는 Streamlit Cloud 이미지에는 <code>libGL.so.1</code>이 아예 없습니다.
+            1차로 <code>packages.txt</code>에 <code>libgl1</code>, <code>libglib2.0-0</code>을 넣었더니
+            이번엔 배포판(Debian trixie)에서 <code>libglib2.0-0</code>이 요구하는 구버전 <code>libffi7</code>을 못 찾아
+            <strong>apt 의존성 충돌</strong>이라는 2차 문제가 생겼습니다.
+          </p>
+        </div>
+        <div class="step fix">
+          <div class="step-label">해결</div>
+          <p>
+            OS 패키지를 최소화하고, 애초에 X11을 요구하지 않는 <strong>headless 빌드</strong>로 교체했습니다.
+            <code>ultralytics</code> 다음 줄에 두어 설치 순서상 나중에 같은 <code>cv2</code> 경로를 덮어쓰게 했습니다.
+          </p>
+          <pre><code><span class="c-comment"># packages.txt</span>
+libgl1
+
+<span class="c-comment"># requirements.txt</span>
+ultralytics
+opencv-python-headless</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. 회고 ── -->
+  <section>
+    <span class="sec-num">05</span>
+    <h2>배운 점과 한계</h2>
+
+    <h3>가장 크게 남은 것</h3>
+    <p>
+      <strong>모델 하나를 잘 만드는 것보다, 여러 모델을 어떻게 엮고 실패를 어떻게 다루느냐가 더 어려웠습니다.</strong>
+      YOLO는 파인튜닝조차 하지 않았고 CNN은 결국 폴백으로 내려갔지만, 그 조합과 폴백 설계 덕분에
+      외부 API가 죽어도 앱은 계속 답을 냅니다. 이 프로젝트에서 실제로 설계다운 설계를 한 부분은 거기였습니다.
+    </p>
+
+    <h3>다시 한다면</h3>
+    <ul>
+      <li><strong>실사진 검증셋을 따로 만들었을 것.</strong> TrashNet 검증셋만 보다가 도메인 차이를 뒤늦게 발견했습니다. 직접 찍은 사진 50~100장이라도 별도 평가셋으로 뒀다면 훨씬 빨리 알았을 것입니다.</li>
+      <li><strong>RAG 인덱싱 시점에 문서 품질을 점검했을 것.</strong> 부록 페이지 문제는 검색이 깨진 뒤에야 발견했습니다. 인덱싱 후 대표 질의 몇 개로 상위 검색 결과를 눈으로 확인하는 절차가 있었다면 초기에 걸렀을 것입니다.</li>
+      <li><strong>VLM 응답을 스키마로 강제했을 것.</strong> 자유 텍스트 파싱에 의존해 모델이 바뀔 때마다 파싱이 흔들렸습니다.</li>
+    </ul>
+
+    <h3>남은 한계</h3>
+    <p>
+      배포 환경의 VLM은 Hugging Face 무료 크레딧에 의존하므로, 크레딧이 소진되면 CNN 폴백으로만 동작합니다.
+      또 한 장에 물체 하나를 전제하고 있어 여러 물체가 섞인 사진은 가장 큰 것 하나만 판별합니다.
+      RAG 답변의 근거 문서도 환경부 가이드라인과 생활법령 두 건으로, 지자체별 상이한 규정은 반영하지 못합니다.
+    </p>
+  </section>
+
+  <nav class="pager" aria-label="다른 프로젝트">
+    <a class="pager-card to-ml" href="ml.html">
+      <div class="pg-label">Log 01</div>
+      <div class="pg-title">대출 금리 예측 모델 →</div>
+    </a>
+    <a class="pager-card to-rl" href="rl.html">
+      <div class="pg-label">Log 02</div>
+      <div class="pg-title">슈퍼마리오 DQN 강화학습 →</div>
+    </a>
+  </nav>
+
+</div>
+
+<footer>
+  <p>© 2026 김승현 · <a href="https://github.com/HyunDove" target="_blank" rel="noopener">github.com/HyunDove</a></p>
+</footer>
+
+</body>
+</html>
