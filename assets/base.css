@@ -50,6 +50,9 @@ html{scroll-behavior:smooth;}
 
 body{
   font-family:var(--font-body);
+  /* 한글은 어절 단위로 줄바꿈 — '프로젝트'가 '프/로젝트'로 잘리는 것 방지 */
+  word-break:keep-all;
+  overflow-wrap:break-word;
   background:
     radial-gradient(ellipse 900px 500px at 50% -10%, var(--proj-soft), transparent 60%),
     repeating-linear-gradient(0deg,  var(--bg-grid) 0 1px, transparent 1px 40px),
