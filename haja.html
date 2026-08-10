@@ -237,20 +237,20 @@
     <div class="trouble">
       <div class="trouble-head">
         <span class="trouble-idx">01</span>
-        <span class="trouble-title">메뉴를 코드에서 DB로 옮긴 이유</span>
+        <span class="trouble-title">무엇을 뺄지 먼저 정한 이유</span>
       </div>
       <div class="trouble-body">
         <div class="step symptom">
           <div class="step-label">상황</div>
-          <p>사이드바와 관리자 메뉴가 프론트엔드에 하드코딩돼 있었습니다. 역할이 하나 늘거나 메뉴 노출 조건이 바뀔 때마다 프론트를 수정·배포해야 했습니다.</p>
+          <p>초기 요구사항을 그대로 담으면 4주 안에 8명이 만들 수 있는 양이 아니었습니다. 우선순위 없이 착수하면 <strong>여러 기능이 동시에 미완성으로 남는</strong> 상태가 예상됐습니다.</p>
         </div>
         <div class="step cause">
           <div class="step-label">판단</div>
-          <p>프로젝트 중반에 <code>PLATFORM_ADMIN</code>, <code>COUNSELOR</code> 등 역할이 계속 추가되는 흐름이 보였습니다. 이대로면 <strong>역할이 늘어날 때마다 배포가 필요한 구조</strong>가 굳어진다고 판단했습니다.</p>
+          <p>무엇을 넣을지보다 <strong>무엇을 뺄지부터 합의해야 한다</strong>고 판단했습니다. PRD를 MUST / SHOULD / COULD로 나누고, 데모에서 반드시 동작해야 하는 흐름인 <strong>사진 업로드 → 결함 탐지 → 보고서 초안</strong>만 MUST로 남겼습니다.</p>
         </div>
         <div class="step fix">
           <div class="step-label">조치</div>
-          <p>메뉴 정의와 역할별 접근 권한을 <code>menus</code> / <code>menu_role_access</code> 테이블로 옮기고, 프론트가 로그인 시 조회해 렌더링하도록 전환했습니다. 이후 메뉴 변경은 <strong>데이터 수정만으로</strong> 처리했습니다.</p>
+          <p>모바일 앱과 알림 발송은 착수 시점에 명시적으로 제외했습니다. 대신 <strong>나중에 붙일 자리는 스키마와 API 계약에 남겨</strong>, 지금 안 만드는 것과 못 만들게 되는 것을 구분했습니다. 결과적으로 핵심 흐름은 마지막까지 바뀌지 않았습니다.</p>
         </div>
       </div>
     </div>
