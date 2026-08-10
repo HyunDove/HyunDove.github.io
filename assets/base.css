@@ -22,7 +22,7 @@
   --border-strong:#37374f;
   --text:#eae9f5;
   --text-dim:#a9a8c4;
-  --muted:#6f6e8c;
+  --muted:#8a89a6;
   --accent:#b79cff;
 
   --ml:#5b8def;    --ml-2:#8fb4ff;
@@ -327,6 +327,33 @@ footer a:hover{text-decoration:underline;}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto;}
   *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+
+/* ── 인쇄 / PDF 저장 ── 다크 배경을 밝게 뒤집어 잉크·가독성 확보 */
+@media print{
+  :root{
+    --bg:#fff; --bg-grid:transparent; --surface:#f6f6f9; --surface-2:#ececf3;
+    --border:#c9c9d6; --border-strong:#9a9ab0;
+    --text:#111118; --text-dim:#2c2c3a; --muted:#55556a;
+    --proj-soft:transparent;
+  }
+  /* body[data-proj]가 :root보다 우선하므로 액센트는 여기서 다시 덮는다 */
+  body[data-proj]{--proj:#4a3a8c; --proj-2:#3b2e70; --proj-soft:transparent;}
+
+  body{background:#fff;color:var(--text);}
+  .topbar,.pager,.btn{display:none;}
+  a{color:var(--text);text-decoration:underline;}
+  footer a[href]::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted);}
+
+  /* 카드·표가 페이지 경계에서 잘리지 않게 */
+  .trouble,.lesson,.kpi,figure,.table-wrap{break-inside:avoid;}
+  h2,h3{break-after:avoid;}
+  section{border-top:1px solid var(--border);padding:24px 0;}
+
+  .meta-cell,.kpi,.lesson,.trouble,pre{background:var(--surface);}
+  th{background:var(--surface-2);color:var(--text-dim);}
+  .trouble-head{background:var(--surface-2);}
+  @page{margin:14mm;}
 }
 
 @media (max-width:560px){
