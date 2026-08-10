@@ -143,6 +143,29 @@
   .vf-scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--llm),transparent);box-shadow:0 0 10px var(--llm);animation:scan 2.6s ease-in-out infinite;}
   @keyframes scan{0%,100%{top:2px;opacity:0;}10%{opacity:1;}50%{top:70px;opacity:1;}90%{opacity:1;}}
 
+  /* ── 섹션 헤더 (팀/개인 구분) ── */
+  .section-head{margin-bottom:26px;}
+  .section-head .section-label{margin-bottom:0;}
+  .section-sub{font-size:.8rem;color:var(--muted);margin-top:9px;}
+
+  /* ── 팀 프로젝트 카드 ──
+     카드 크기는 개인 프로젝트와 동일하게 두고,
+     좌측 액센트 바 + 글로우 테두리로만 구분한다. */
+  .project-card.hero{
+    border-color:#3d3260;
+    box-shadow:0 0 0 1px rgba(183,156,255,.09),0 14px 46px -22px rgba(183,156,255,.5);
+    margin-bottom:52px;
+  }
+  .project-card.hero::before{
+    content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+    background:linear-gradient(180deg,var(--haja),var(--haja-2));
+    z-index:2;
+  }
+  .project-card.hero .card-log{font-size:.72rem;padding:5px 12px;}
+
+  /* ── 개인 프로젝트 = 팀 카드와 동일한 폭·크기로 세로 나열 ── */
+  .personal-grid{display:block;}
+
   @media (prefers-reduced-motion: reduce){
     .cursor{animation:none;opacity:1;}
     .rl-bar-fill{animation:none;width:78%;}
@@ -163,7 +186,7 @@
 <header class="home">
   <p class="prompt-line"><span class="sigil">&#10095;</span>whoami<span class="cursor"></span></p>
   <h1>김승현<span class="role">AI Engineer — 백엔드 6년차</span></h1>
-  <p class="bio">컨택센터 · 금융 도메인의 6년차 백엔드 개발자입니다. 지금은 AI 서비스 개발로 영역을 넓히고 있습니다.<br />모델을 만드는 데서 그치지 않고, 실제로 동작하는 서비스까지 구현합니다.</p>
+  <p class="bio">컨택센터 · 금융 도메인의 6년차 백엔드 개발자입니다.<br />지금은 AI 서비스 개발로 영역을 넓히고 있습니다.<br />모델을 만드는 데서 그치지 않고, 실제로 동작하는 서비스까지 구현합니다.</p>
   <div class="header-tags">
     <span class="header-tag">Python</span>
     <span class="header-tag">scikit-learn</span>
@@ -177,10 +200,13 @@
 </header>
 
 <main class="home">
-  <p class="section-label">Team — 팀 프로젝트</p>
+  <div class="section-head">
+    <p class="section-label">Team Project — 팀 프로젝트</p>
+    <p class="section-sub">8인 협업 · PM 겸 풀스택 · 실서비스 배포</p>
+  </div>
 
   <!-- ── 팀 : HajaCheck ── -->
-  <article class="project-card haja">
+  <article class="project-card haja hero">
     <div class="instrument haja-inst">
       <svg viewBox="0 0 400 108" role="img" aria-label="건물 외벽에서 균열을 탐지해 바운딩 박스로 표시하고 등급을 산정하는 모습">
         <g class="haja-wall">
@@ -230,52 +256,49 @@
     </div>
   </article>
 
-  <p class="section-label">Personal — 개인 프로젝트 · 진행 순</p>
+  <div class="section-head">
+    <p class="section-label">Personal — 개인 프로젝트</p>
+    <p class="section-sub">주 단위로 쌓은 학습 로그 3편 · 최신순</p>
+  </div>
 
-  <!-- ── LOG 01 : ML ── -->
-  <article class="project-card ml">
-    <div class="instrument ml-inst">
-      <svg viewBox="0 0 400 108" preserveAspectRatio="none" role="img" aria-label="예측 금리와 실제 금리의 산점도와 회귀선">
-        <g class="ml-grid">
-          <line x1="0" y1="27" x2="400" y2="27"/><line x1="0" y1="54" x2="400" y2="54"/><line x1="0" y1="81" x2="400" y2="81"/>
-          <line x1="80" y1="0" x2="80" y2="108"/><line x1="160" y1="0" x2="160" y2="108"/><line x1="240" y1="0" x2="240" y2="108"/><line x1="320" y1="0" x2="320" y2="108"/>
-        </g>
-        <circle class="ml-dot" cx="30" cy="78" r="3"/><circle class="ml-dot" cx="60" cy="70" r="3"/>
-        <circle class="ml-dot" cx="95" cy="66" r="3"/><circle class="ml-dot" cx="120" cy="55" r="3"/>
-        <circle class="ml-dot" cx="150" cy="60" r="3"/><circle class="ml-dot" cx="175" cy="45" r="3"/>
-        <circle class="ml-dot" cx="205" cy="48" r="3"/><circle class="ml-dot" cx="230" cy="38" r="3"/>
-        <circle class="ml-dot" cx="255" cy="35" r="3"/><circle class="ml-dot" cx="280" cy="28" r="3"/>
-        <circle class="ml-dot" cx="305" cy="30" r="3"/><circle class="ml-dot" cx="330" cy="18" r="3"/>
-        <circle class="ml-dot" cx="355" cy="20" r="3"/><circle class="ml-dot" cx="378" cy="12" r="3"/>
-        <path class="ml-line" d="M20,85 L385,10"/>
-      </svg>
-      <span class="ml-caption">fig. 예측 금리 vs 실제 금리 — 회귀선</span>
+  <div class="personal-grid">
+
+  <!-- ── LOG 01 : LLM + CV ── -->
+  <article class="project-card llm">
+    <div class="instrument llm-inst">
+      <div class="viewfinder">
+        <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
+        <span class="vf-corner bl"></span><span class="vf-corner br"></span>
+        <span class="vf-box"></span>
+        <span class="vf-tag">PET 93.7%</span>
+        <span class="vf-scan"></span>
+      </div>
     </div>
     <div class="card-inner">
       <div class="card-top">
         <div>
-          <span class="card-log"><span class="dot"></span>Log 01 · Machine Learning</span>
-          <h2 class="card-title">대출 금리 예측 모델</h2>
+          <span class="card-log"><span class="dot"></span>Log 01 · LLM · Computer Vision</span>
+          <h2 class="card-title">분리수거 판별 어시스턴트</h2>
         </div>
-        <span class="card-period">2026.06.17 – 06.24</span>
+        <span class="card-period">2026.07.02 – 07.06</span>
       </div>
       <p class="card-desc">
-        Kaggle Credit Risk Dataset 32,581건으로 대출 금리를 예측하는 회귀 모델.
-        선형 회귀부터 앙상블까지 4개 모델을 같은 조건에서 비교하고, 튜닝을 거쳐 Flask API와 Streamlit으로 배포했습니다.
+        사진 한 장으로 재질을 판별하고 환경부 가이드라인을 근거로 배출 방법을 안내하는 AI.
+        YOLO · EfficientNet · VLM · RAG 4단 파이프라인을 폴백 설계로 묶었습니다.
       </p>
       <div class="highlights">
-        <div class="highlight-item"><div class="highlight-value">0.9053</div><div class="highlight-label">R² (랜덤 포레스트)</div></div>
-        <div class="highlight-item"><div class="highlight-value">1.0017</div><div class="highlight-label">RMSE</div></div>
-        <div class="highlight-item"><div class="highlight-value">29,459</div><div class="highlight-label">학습 데이터</div></div>
-        <div class="highlight-item"><div class="highlight-value">4종</div><div class="highlight-label">비교 모델</div></div>
+        <div class="highlight-item"><div class="highlight-value">93.66%</div><div class="highlight-label">CNN 검증 정확도</div></div>
+        <div class="highlight-item"><div class="highlight-value">2,527</div><div class="highlight-label">학습 이미지</div></div>
+        <div class="highlight-item"><div class="highlight-value">4단</div><div class="highlight-label">판별 파이프라인</div></div>
+        <div class="highlight-item"><div class="highlight-value">RAG</div><div class="highlight-label">근거 문서 기반</div></div>
       </div>
       <div class="card-links">
-        <a class="btn btn-primary" href="ml.html">
+        <a class="btn btn-primary" href="llm.html">
           자세히 보기
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg>
         </a>
-        <a class="btn btn-ghost" href="https://shmlassignment.streamlit.app/" target="_blank" rel="noopener">데모</a>
-        <a class="btn btn-ghost" href="https://github.com/HyunDove/machine-learning-assignment" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://trash-check.streamlit.app/" target="_blank" rel="noopener">데모</a>
+        <a class="btn btn-ghost" href="https://github.com/HyunDove/trash-check" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </article>
@@ -319,45 +342,55 @@
     </div>
   </article>
 
-  <!-- ── LOG 03 : LLM + CV ── -->
-  <article class="project-card llm">
-    <div class="instrument llm-inst">
-      <div class="viewfinder">
-        <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
-        <span class="vf-corner bl"></span><span class="vf-corner br"></span>
-        <span class="vf-box"></span>
-        <span class="vf-tag">PET 93.7%</span>
-        <span class="vf-scan"></span>
-      </div>
+  <!-- ── LOG 03 : ML ── -->
+  <article class="project-card ml">
+    <div class="instrument ml-inst">
+      <svg viewBox="0 0 400 108" preserveAspectRatio="none" role="img" aria-label="예측 금리와 실제 금리의 산점도와 회귀선">
+        <g class="ml-grid">
+          <line x1="0" y1="27" x2="400" y2="27"/><line x1="0" y1="54" x2="400" y2="54"/><line x1="0" y1="81" x2="400" y2="81"/>
+          <line x1="80" y1="0" x2="80" y2="108"/><line x1="160" y1="0" x2="160" y2="108"/><line x1="240" y1="0" x2="240" y2="108"/><line x1="320" y1="0" x2="320" y2="108"/>
+        </g>
+        <circle class="ml-dot" cx="30" cy="78" r="3"/><circle class="ml-dot" cx="60" cy="70" r="3"/>
+        <circle class="ml-dot" cx="95" cy="66" r="3"/><circle class="ml-dot" cx="120" cy="55" r="3"/>
+        <circle class="ml-dot" cx="150" cy="60" r="3"/><circle class="ml-dot" cx="175" cy="45" r="3"/>
+        <circle class="ml-dot" cx="205" cy="48" r="3"/><circle class="ml-dot" cx="230" cy="38" r="3"/>
+        <circle class="ml-dot" cx="255" cy="35" r="3"/><circle class="ml-dot" cx="280" cy="28" r="3"/>
+        <circle class="ml-dot" cx="305" cy="30" r="3"/><circle class="ml-dot" cx="330" cy="18" r="3"/>
+        <circle class="ml-dot" cx="355" cy="20" r="3"/><circle class="ml-dot" cx="378" cy="12" r="3"/>
+        <path class="ml-line" d="M20,85 L385,10"/>
+      </svg>
+      <span class="ml-caption">fig. 예측 금리 vs 실제 금리 — 회귀선</span>
     </div>
     <div class="card-inner">
       <div class="card-top">
         <div>
-          <span class="card-log"><span class="dot"></span>Log 03 · LLM · Computer Vision</span>
-          <h2 class="card-title">분리수거 판별 어시스턴트</h2>
+          <span class="card-log"><span class="dot"></span>Log 03 · Machine Learning</span>
+          <h2 class="card-title">대출 금리 예측 모델</h2>
         </div>
-        <span class="card-period">2026.07.02 – 07.06</span>
+        <span class="card-period">2026.06.17 – 06.24</span>
       </div>
       <p class="card-desc">
-        사진 한 장으로 재질을 판별하고 환경부 가이드라인을 근거로 배출 방법을 안내하는 AI.
-        YOLO · EfficientNet · VLM · RAG 4단 파이프라인을 폴백 설계로 묶었습니다.
+        Kaggle Credit Risk Dataset 32,581건으로 대출 금리를 예측하는 회귀 모델.
+        선형 회귀부터 앙상블까지 4개 모델을 같은 조건에서 비교하고, 튜닝을 거쳐 Flask API와 Streamlit으로 배포했습니다.
       </p>
       <div class="highlights">
-        <div class="highlight-item"><div class="highlight-value">93.66%</div><div class="highlight-label">CNN 검증 정확도</div></div>
-        <div class="highlight-item"><div class="highlight-value">2,527</div><div class="highlight-label">학습 이미지</div></div>
-        <div class="highlight-item"><div class="highlight-value">4단</div><div class="highlight-label">판별 파이프라인</div></div>
-        <div class="highlight-item"><div class="highlight-value">RAG</div><div class="highlight-label">근거 문서 기반</div></div>
+        <div class="highlight-item"><div class="highlight-value">0.9053</div><div class="highlight-label">R² (랜덤 포레스트)</div></div>
+        <div class="highlight-item"><div class="highlight-value">1.0017</div><div class="highlight-label">RMSE</div></div>
+        <div class="highlight-item"><div class="highlight-value">29,459</div><div class="highlight-label">학습 데이터</div></div>
+        <div class="highlight-item"><div class="highlight-value">4종</div><div class="highlight-label">비교 모델</div></div>
       </div>
       <div class="card-links">
-        <a class="btn btn-primary" href="llm.html">
+        <a class="btn btn-primary" href="ml.html">
           자세히 보기
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg>
         </a>
-        <a class="btn btn-ghost" href="https://trash-check.streamlit.app/" target="_blank" rel="noopener">데모</a>
-        <a class="btn btn-ghost" href="https://github.com/HyunDove/trash-check" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://shmlassignment.streamlit.app/" target="_blank" rel="noopener">데모</a>
+        <a class="btn btn-ghost" href="https://github.com/HyunDove/machine-learning-assignment" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </article>
+
+  </div>
 
 </main>
 
